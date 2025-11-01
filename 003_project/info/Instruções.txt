@@ -1,6 +1,6 @@
 Para facilitar a leitura
 
-Primeira instrução: mov rx, i16 -- significado: rx = 16 (move um valor imediato de 16 bits p/o registrador rx)
+Primeira instrução: mov rx, i16 -- significado: rx = i16 (move um valor imediato de 16 bits p/o registrador rx)
 Segunda instrução: mov rx, ry -- significado: rx = ry (copia o valor do registrador ry p/o registrador rx)
 Terceira instrução: mov rx, [ry] -- significado: rx = MEM[ry] (carrega o valor da memória, endereçada por ry, para o registrador rx)
 Quarta instrução: mov [rx], ry -- significado: MEM[rx] = ry (armazena o valor de ry na posição de memória endereçada por rx)
