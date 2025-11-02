@@ -1,16 +1,11 @@
 #include "cpu.h"
+#include "cpu_internals.h"
 
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#define REG_COUNT 16
-
-typedef struct Cpu {
-    uint16_t pc;
-    uint32_t r[REG_COUNT];
-    uint8_t flags;
-} Cpu;
+#include "mem.h"
 
 Cpu* cpu_create() {
     Cpu* cpu = (Cpu*)calloc(1, sizeof(Cpu));
@@ -21,6 +16,10 @@ Cpu* cpu_create() {
     }
 
     return cpu;
+}
+
+void cpu_cycle(Cpu* cpu, Memory* mem) {
+    uint32_t instruction = fetch(mem, cpu);
 }
 
 void cpu_destroy(Cpu* cpu) {

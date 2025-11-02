@@ -5,5 +5,6 @@ typedef struct Cpu Cpu;
 
 Cpu* cpu_create();
 void cpu_destroy(Cpu* cpu);
+void cpu_cycle();
 
 #endif

@@ -12,10 +12,11 @@ int main(int argc, char* argv[]) {
 
     Cpu* cpu = cpu_create();
 
-    // Alocando memória de 1kB com alinhamento de 1 byte
+    // Alocando memória de 1kB
     Memory* mem = mem_create(1024);
     
     mem_load_program(mem, argv[1]);
+    cpu_cycle();
 
     return 0;
 }
