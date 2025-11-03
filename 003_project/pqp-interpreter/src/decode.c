@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "mem.h"
-
 typedef enum inst_type_t { IMMEDIATE, JUMP, MOV, ARITHMETIC_LOGIC, SHIFT, INVALID } inst_type_t;
 
 const inst_type_t instruction_table[16] = {
@@ -38,7 +36,7 @@ void decode_operators(Instruction* instruction, inst_type_t type, uint32_t code)
         case IMMEDIATE:
             i16 = code & 0xFFFF;
             // Extensão de sinal
-            i16 = (i16 & (1 << 15)) ? (i16 | (0xFF << 16)) : (i16 | (0x00 << 16));
+            i16 = (i16 & (1 << 15)) ? (i16 | (0xFFFF << 16)) : i16;
 
             instruction->reg_x = (code & (0xF0 << 16)) >> 20;
             instruction->immediate = i16;
@@ -50,7 +48,7 @@ void decode_operators(Instruction* instruction, inst_type_t type, uint32_t code)
         case JUMP:
             i16 = code & 0xFFFF;
             // Extensão de sinal
-            i16 = (i16 & (1 << 15)) ? (i16 | (0xFF << 16)) : (i16 | (0x00 << 16));
+            i16 = (i16 & (1 << 15)) ? (i16 | (0xFFFF << 16)) : i16;
             instruction->immediate = i16;
             return;
         case ARITHMETIC_LOGIC:
