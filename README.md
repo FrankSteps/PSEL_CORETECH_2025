@@ -2,10 +2,10 @@
 
 O grupo é formado pelos seguintes discentes:
 
-| Nome                   | Curso                    |
-|------------------------|--------------------------|
-| Franciso (Frank Steps) | Ciência da Computação    |
-| Gabriel                | Engenharia da Computação |
-| Guilherme              | Ciência da Computação    |
-| Rhuan Pablo            | Engenharia da Computação |
-| Vinicíus               | Engenharia da Computação |
+| Nome                    | Curso                    |
+|-------------------------|--------------------------|
+| Francisco (Frank Steps) | Ciência da Computação    |
+| Gabriel Santos          | Engenharia da Computação |
+| Guilherme Ferreira      | Ciência da Computação    |
+| Rhuan Pablo Silva       | Engenharia da Computação |
+| João Vinicíus de A.     | Engenharia da Computação |
