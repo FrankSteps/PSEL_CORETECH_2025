@@ -63,7 +63,12 @@
 
 \section{Introdução}
 
-Texto aqui.
+O problema escolhido pelo grupo foi o Problema C: Implementação de um interpretador feito em C/C++ para a arquitetura PicoQuickProcessor.
+
+Esse problema foi selecionado pois a maioria dos membros do grupo são calouros, que portanto não teriam tanta praticidade com Verilog.
+A linguagem escolhida foi C.
+
+Este documento consta como a entrada para o Problema A: Documentação e Avaliação.
 
 \section{Estruturas de Dados}
 
@@ -93,7 +98,7 @@ Os registradores não estão organizados numa forma específica para eles, todav
 \begin{enumerate}
 \item \texttt{pc} (\texttt{uint16\_t})
   \begin{description}
-  \item Indica a quantidade de processos sendo executados pela CPU.
+  \item Indica a quantidade de programas (instruções) que o interpretador está processar.
   \end{description}
 \item \texttt{r[REG\_COUNT]} (\texttt{uint32\_t})
   \begin{description}
