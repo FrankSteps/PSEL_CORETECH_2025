@@ -2,7 +2,7 @@ TARGET = build/pqp-interpreter
 
 FLAGS = -Wall -O3 -g -Iinclude
 
-OBJECTS = main.o cpu.o mem.o fetch.o
+OBJECTS = main.o cpu.o mem.o fetch.o decode.o
 
 all: $(OBJECTS)
 	gcc $(OBJECTS) -o $(TARGET)
@@ -18,6 +18,9 @@ mem.o: src/mem.c
 
 fetch.o: src/fetch.c
 	gcc $(FLAGS) -c src/fetch.c -o fetch.o
+
+decode.o: src/decode.c
+	gcc $(FLAGS) -c src/decode.c -o decode.o
 
 clean:
 	rm -f $(TARGET) $(OBJECTS)

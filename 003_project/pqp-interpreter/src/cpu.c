@@ -19,7 +19,10 @@ Cpu* cpu_create() {
 }
 
 void cpu_cycle(Cpu* cpu, Memory* mem) {
-    uint32_t instruction = fetch(mem, cpu);
+    Instruction* instruction = (Instruction*)calloc(1, sizeof(Instruction));
+
+    uint32_t machine_code = fetch(mem, cpu);
+    decode(machine_code, instruction);
 }
 
 void cpu_destroy(Cpu* cpu) {

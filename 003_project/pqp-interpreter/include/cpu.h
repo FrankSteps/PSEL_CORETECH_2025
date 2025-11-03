@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include "mem.h"
+
 //constantes úteis
 #define NUM_REGISTERS 16
 #define NUM_OPCODES 16
@@ -13,6 +15,6 @@ typedef struct Cpu Cpu;
 
 Cpu* cpu_create();
 void cpu_destroy(Cpu* cpu);
-void cpu_cycle();
+void cpu_cycle(Cpu* cpu, Memory* mem);
 
 #endif

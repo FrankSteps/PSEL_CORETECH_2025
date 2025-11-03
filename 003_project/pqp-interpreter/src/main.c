@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     Memory* mem = mem_create(1024);
     
     mem_load_program(mem, argv[1]);
-    cpu_cycle();
+    cpu_cycle(cpu, mem);
 
     return 0;
 }
