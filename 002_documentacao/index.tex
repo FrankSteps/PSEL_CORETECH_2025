@@ -14,7 +14,7 @@
 \definecolor{bblue}{HTML}{0645AD} % Azul meio escuro.
 \hypersetup{colorlinks, linkcolor=blue, urlcolor=bblue} % Links azuis.
 % Subindo o título.
-\usepackage{titling} % Informações de títulos melhores
+\usepackage{titling} % Informações de títulos melhores.
 \setlength{\droptitle}{-6em}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{1em}
@@ -25,21 +25,103 @@
 \usepackage[explicit]{titlesec} % Estilos de título.
 \usepackage{fvextra} % Melhorias para blocos de código.
 \usepackage{tcolorbox} % Caixas legais que podem ser usadas para colocar código dentro.
-\author{Grupo 1}
-\date{\today}
-\title{Problema C: Implementação de um interpretador feito em C++ para a arquitetura PicoQuickProcessor}
+\usepackage{calc} % Matemática em comandos.
 \hypersetup{
   pdfauthor={Grupo 1},
   pdftitle={Problema C: Implementação de um interpretador feito em C++ para a arquitetura PicoQuickProcessor},
-   pdfkeywords={},
-   pdfsubject={},
-   pdfcreator={TeX Live 2025},
-   pdflang={English}}
-\usepackage{calc} % Matemática em comandos.
-\makeatother\begin{document}
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={TeX Live 2025},
+  pdflang={English}}
+
+\author{Grupo 1}
+\date{\today}
+\title{Problema C: Implementação de um interpretador feito em C++ para a arquitetura PicoQuickProcessor}
+
+\makeatother
+\begin{document}
 
 \maketitle
-\tableofcontents \pagebreak\section{Introdução}
+
+\tableofcontents
+
+\pagebreak
+
+\section{Membros}
+
+\begin{center}
+  \begin{tabular}{ll}
+    Nome & Curso\\
+    \hline
+    Franciso & Ciência da Computação\\
+    Gabriel & Engenharia da Computação\\
+    Guilherme & Ciência da Computação\\
+    Rhuan Pablo & Engenharia da Computação\\
+    Vinicíus & Engenharia da Computação\\
+  \end{tabular}
+\end{center}
+
+\section{Introdução}
+
+Texto aqui.
+
+\section{Estruturas de Dados}
+
+O projeto está organizado de uma maneira que se assimila ao paradigma de objetos, utilizando de \texttt{structs} para isso. Como legenda, saiba que, para todo campo de um \texttt{struct} que foi citado, em parênteses estará seu tipo.
+
+\subsection{Memória}
+
+Para a memória, um \texttt{struct} contendo dois campos foi utilizado.
+
+\begin{enumerate}
+\item \texttt{mem8} (\texttt{uint8\_t})
+  \begin{description}
+  \item Simula a memória de 256 bytes do processador.
+  \end{description}
+\item \texttt{size} (\texttt{uint32\_t})
+  \begin{description}
+  \item Indica a quantidade de memória a ser alocada pelo interpretador.
+  \end{description}
+\end{enumerate}
+
+Os tipos usados vem do header \texttt{<stdint.h>}, e portanto possuem larguras fixas independentemente da implementação.
+
+\subsection{Registradores}
+
+Os registradores não estão organizados numa forma específica para eles, todavia, fazem parte do \texttt{struct} \texttt{Cpu}, que guarda as seguintes informações:
+
+\begin{enumerate}
+\item \texttt{pc} (\texttt{uint16\_t})
+  \begin{description}
+  \item Indica a quantidade de processos sendo executados pela CPU.
+  \end{description}
+\item \texttt{r[REG\_COUNT]} (\texttt{uint32\_t})
+  \begin{description}
+  \item Cria um \texttt{array} que servirá para simular os 16 registradores de propósito geral da arquitetura.
+  \end{description}
+\end{enumerate}
+
+\subsection{Flags}
+
+As flags, assim como os registradores, fazem parte da definição da CPU.
+
+\section{Lógica Principal}
+
+Texto aqui.
+
+\section{Implementação de Instruções Complexas}
+
+Texto aqui.
+
+\section{Coleta de Dados}
+
+Texto aqui.
+
+\section{Desafios}
+
+Texto aqui.
+
+\section{Decisões}
 
 Texto aqui.
 

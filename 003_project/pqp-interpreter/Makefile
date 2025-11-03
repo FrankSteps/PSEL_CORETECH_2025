@@ -5,7 +5,9 @@ FLAGS = -Wall -O3 -g -Iinclude
 OBJECTS = main.o cpu.o mem.o fetch.o decode.o
 
 all: $(OBJECTS)
-	gcc $(OBJECTS) -o $(TARGET)
+	gcc $(OBJECTS)
+	mkdir -p $(TARGET)
+	mv $(OBJECTS) $(TARGET)
 
 main.o: src/main.c
 	gcc $(FLAGS) -c src/main.c -o main.o
@@ -23,4 +25,5 @@ decode.o: src/decode.c
 	gcc $(FLAGS) -c src/decode.c -o decode.o
 
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	rm a.out
+	rm -rf $(TARGET)
