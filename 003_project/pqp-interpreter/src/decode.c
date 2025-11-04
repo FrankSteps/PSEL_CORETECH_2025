@@ -4,25 +4,12 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-typedef enum inst_type_t { IMMEDIATE, JUMP, MOV, ARITHMETIC_LOGIC, SHIFT, INVALID } inst_type_t;
-
 const inst_type_t instruction_table[16] = {
     [0x00] = IMMEDIATE,
-    [0x01] = MOV,
-    [0X02] = MOV,
-    [0x03] = MOV,
-    [0x04] = MOV,
-    [0x05] = JUMP,
-    [0x06] = JUMP,
-    [0x07] = JUMP,
-    [0x08] = JUMP,
-    [0x09] = ARITHMETIC_LOGIC,
-    [0x0A] = ARITHMETIC_LOGIC,
-    [0x0B] = ARITHMETIC_LOGIC,
-    [0x0C] = ARITHMETIC_LOGIC,
-    [0x0D] = ARITHMETIC_LOGIC,
-    [0x0E] = SHIFT,
-    [0x0F] = SHIFT
+    [0x01 ... 0x04] = MOV,
+    [0x05 ... 0x08] = JUMP,
+    [0x09 ... 0x0D] = ARITHMETIC_LOGIC,
+    [0x0E ... 0x0F] = SHIFT
 };
 
 inst_type_t decode_instruction_type(uint8_t opcode) {
@@ -34,7 +21,7 @@ void decode_operators(Instruction* instruction, inst_type_t type, uint32_t code)
 
     switch (type) {
         case IMMEDIATE:
-            i16 = code & 0xFFFF;
+            i16 = (code & 0xFFFF00) >> 8;
             // Extensão de sinal
             i16 = (i16 & (1 << 15)) ? (i16 | (0xFFFF << 16)) : i16;
 
@@ -46,7 +33,7 @@ void decode_operators(Instruction* instruction, inst_type_t type, uint32_t code)
             instruction->reg_y = (code & (0x0F << 16)) >> 16;
             return;
         case JUMP:
-            i16 = code & 0xFFFF;
+            i16 = (code & 0xFFFF00) >> 8;
             // Extensão de sinal
             i16 = (i16 & (1 << 15)) ? (i16 | (0xFFFF << 16)) : i16;
             instruction->immediate = i16;
@@ -56,7 +43,7 @@ void decode_operators(Instruction* instruction, inst_type_t type, uint32_t code)
             instruction->reg_y = (code & (0x0F << 16)) >> 16;
             return;
         case SHIFT:
-            i5 = code & 0x1F;
+            i5 = (code & (0x1F << 15)) >> 15;
 
             instruction->reg_x = (code & (0xF0 << 16)) >> 20;
             instruction->immediate = i5;
@@ -67,17 +54,20 @@ void decode_operators(Instruction* instruction, inst_type_t type, uint32_t code)
     }
 }
 
-void decode(uint32_t code, Instruction* instruction) {
-    uint8_t opcode = (code & 0xFF000000) >> 24;
+Instruction decode(uint32_t code) {
+    Instruction instruction = {0};
+    instruction.opcode = (code & 0xFF000000) >> 24;
 
-    printf("decode (opcode): 0x%02X\n", opcode);
+    printf("decode (opcode): 0x%02X\n", instruction.opcode);
 
-    inst_type_t type = decode_instruction_type(opcode);
-    decode_operators(instruction, type, code);
+    inst_type_t type = decode_instruction_type(instruction.opcode);
+    decode_operators(&instruction, type, code);
 
     printf("decode (instruction): x->0x%04X, y->0x%04X, i->0x%X\n",
-        instruction->reg_x, 
-        instruction->reg_y,
-        instruction->immediate
+        instruction.reg_x, 
+        instruction.reg_y,
+        instruction.immediate
     );
+
+    return instruction;
 }

@@ -19,7 +19,13 @@ typedef struct Instruction {
     uint16_t immediate;
 } Instruction;
 
+typedef enum inst_type_t { IMMEDIATE, JUMP, MOV, ARITHMETIC_LOGIC, SHIFT, INVALID } inst_type_t;
+
+extern const inst_type_t instruction_table[16];
+extern const void* instruction_exec_table[16];
+
 uint32_t fetch(Memory* mem, Cpu* cpu);
-void decode(uint32_t code, Instruction* instruction);
+Instruction decode(uint32_t code);
+void execute(Instruction instruction);
 
 #endif
