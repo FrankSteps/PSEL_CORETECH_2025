@@ -1,13 +1,15 @@
-TARGET = build/pqp-interpreter
+BUILD_DIR = build
+
+TARGET = $(BUILD_DIR)/pqp-interpreter
 
 FLAGS = -Wall -O3 -g -Iinclude
 
-OBJECTS = main.o cpu.o mem.o fetch.o decode.o
+OBJECTS = main.o cpu.o mem.o fetch.o decode.o execute.o
 
 all: $(OBJECTS)
-	gcc $(OBJECTS)
-	mkdir -p $(TARGET)
-	mv $(OBJECTS) $(TARGET)
+	mkdir -p $(BUILD_DIR)
+	gcc $(OBJECTS) -o $(TARGET)
+	mv $(OBJECTS) $(BUILD_DIR)
 
 main.o: src/main.c
 	gcc $(FLAGS) -c src/main.c -o main.o
@@ -24,6 +26,8 @@ fetch.o: src/fetch.c
 decode.o: src/decode.c
 	gcc $(FLAGS) -c src/decode.c -o decode.o
 
+execute.o: src/execute.c
+	gcc $(FLAGS) -c src/execute.c -o execute.o
+
 clean:
-	rm a.out
-	rm -rf $(TARGET)
+	rm -rf $(BUILD_DIR) $(OBJECTS)

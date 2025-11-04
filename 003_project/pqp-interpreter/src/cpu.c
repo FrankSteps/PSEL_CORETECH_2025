@@ -21,7 +21,8 @@ Cpu* cpu_create() {
 void cpu_cycle(Cpu* cpu, Memory* mem) {
     uint32_t machine_code = fetch(mem, cpu);
     Instruction instruction = decode(machine_code);
-    execute(instruction);
+
+    execute(cpu, mem, instruction);
 }
 
 void cpu_destroy(Cpu* cpu) {
