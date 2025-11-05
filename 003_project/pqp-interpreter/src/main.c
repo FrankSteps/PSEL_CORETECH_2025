@@ -1,18 +1,25 @@
 /*
-    Desenvolvedores:
-    Data de criação:
-    Data de modificação:
+    Desenvolvedores:        Francisco Passos & João Vinícius & Guilherme Ferreira
+    Data de criação:        05/11/2025     
+    Data de modificação:    05/11/2025
 
-    Observações adicionais:
+    Observações adicionais: 
+        Este é o arquivo principal. O mesmo se encontra encarregado por carregar o programa na memória e iniciar a simulação do processador.
+
+    Execução:
+    ./main input.txt output.txt
 */
 
+// incluindo as bibliotecas base
 #include <stdio.h>
 #include <stdlib.h>
 
+// chamando os headers do processador e da memória
 #include "cpu.h"
 #include "mem.h"
 
 int main(int argc, char* argv[]) {
+    // confirmando se o usuário passou o caminho para os arquivos da forma devida. (caminho para o input e para o output)
     if (argc < 3) {
         printf("Usage: main /path/to/input /path/to/output\n");
         exit(EXIT_FAILURE);
@@ -26,5 +33,6 @@ int main(int argc, char* argv[]) {
     mem_load_program(mem, argv[1]);
     cpu_cycle(cpu, mem);
 
+    // encerrando o programa
     return 0;
 }
