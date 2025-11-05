@@ -26,6 +26,6 @@ extern const void* instruction_exec_table[16];
 
 uint32_t fetch(Memory* mem, Cpu* cpu);
 Instruction decode(uint32_t code);
-void execute(Instruction instruction);
+void execute(Cpu* cpu, Memory* mem, Instruction instruction);
 
 #endif
