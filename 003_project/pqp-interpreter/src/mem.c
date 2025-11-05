@@ -1,3 +1,8 @@
+/*
+    Esta parte do programa implementa um módulo de memória: 
+    ele cria, carrega, lê e destrói a memória usada pela CPU simulada.
+*/
+
 #include "mem.h"
 
 #include <stdlib.h>
@@ -11,6 +16,7 @@ typedef struct Memory {
     bool loaded;
 } Memory;
 
+// Função responsável pela criação da memória
 Memory* mem_create(uint32_t size) {
     Memory* mem = (Memory*)calloc(1, sizeof(Memory));
 
@@ -28,12 +34,14 @@ Memory* mem_create(uint32_t size) {
     return mem;
 }
 
-// evitar o vazamento de memória
+// Função responsável por evitar o vazamento de memória -> Destruição da mesma
 void mem_destroy(Memory* mem) {
+    if (!mem) return;
+    free(mem->mem8);
     free(mem);
 }
 
-//função para carregar o input para a memória
+// Função para carregar o input para a memória
 void mem_load_program(Memory* mem, char* input_path) {
     FILE* input = fopen(input_path, "r");
 
@@ -51,7 +59,7 @@ void mem_load_program(Memory* mem, char* input_path) {
 }
 
 
-//Ler um byte da memória
+// Função responsável por ler um byte da memória
 uint8_t mem_read8(Memory* mem, uint16_t address) {
     if (!mem || !mem->loaded) {
         printf("**Erro: Necessario alocar memoria/carregar programa para ler.\n");
@@ -62,7 +70,7 @@ uint8_t mem_read8(Memory* mem, uint16_t address) {
 }
 
 
-//Ler quatr obytes da memória
+// Função responsável por ler quatro bytes da memória
 uint32_t mem_read32(Memory* mem, uint16_t address) {
     uint8_t buffer[4] = {0};
     uint32_t content = 0x0;
