@@ -28,3 +28,4 @@ void cpu_cycle(Cpu* cpu, Memory* mem) {
 void cpu_destroy(Cpu* cpu) {
     free(cpu);
 }
+

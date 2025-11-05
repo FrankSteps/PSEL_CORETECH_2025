@@ -1,3 +1,11 @@
+/*
+    Desenvolvedores:
+    Data de criação:
+    Data de modificação:
+
+    Observações adicionais:
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -10,11 +18,11 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    // Declarações iniciais: Alocando memória de 1kB e criando o processador
     Cpu* cpu = cpu_create();
-
-    // Alocando memória de 1kB
     Memory* mem = mem_create(1024);
-    
+
+    //carregar a entrada do programa
     mem_load_program(mem, argv[1]);
     cpu_cycle(cpu, mem);
 

@@ -1,3 +1,5 @@
+% Preâmbulo
+
 \documentclass[a4paper]{article} % A4, o padrão usado no Brasil.
 \usepackage[brazilian]{babel} % Linguagem em português.
 \usepackage{abnt} % Normas ABNT.
@@ -26,17 +28,22 @@
 \usepackage{fvextra} % Melhorias para blocos de código.
 \usepackage{tcolorbox} % Caixas legais que podem ser usadas para colocar código dentro.
 \usepackage{calc} % Matemática em comandos.
-\hypersetup{
+\hypersetup {
   pdfauthor={Grupo 1},
   pdftitle={Problema C: Implementação de um interpretador feito em C++ para a arquitetura PicoQuickProcessor},
   pdfkeywords={},
   pdfsubject={},
   pdfcreator={TeX Live 2025},
-  pdflang={English}}
+  pdflang={English}
+}
+
+% Identificação.
 
 \author{Grupo 1}
 \date{\today}
 \title{Problema C: Implementação de um interpretador feito em C++ para a arquitetura PicoQuickProcessor}
+
+% Documento.
 
 \makeatother
 \begin{document}
@@ -65,40 +72,43 @@
 
 Esta documentação refere-se ao ``Problema C'' da documentação disponibilizada pela equipe da CORETECH para o processo seletivo (PSEL) a qual os membros responsáveis por este projeto estão participando.
 
-O objetivo do projeto a qual este arquivo irá documentar - assim como foi pedido na documentação do PSEL da coretech - é criar um simulador, em linguagem C/C++, capaz de reproduzir o comportamento de um processador 32 Bits como artifício para didática. Essa simulação será executada em um ambiente x86-64 e um arquivo contendo um código de máquina será oferecida como a entrada e, por intermédio do simulador projetado conforme as regras de arquitetura d o PicoQuick, gerará um relatório detalhado da execução e do estado final do sistema.
+O objetivo do projeto a qual este arquivo irá documentar --- assim como foi pedido na documentação do PSEL da coretech --- é criar um simulador, em linguagem C/C++, capaz de reproduzir o comportamento de um processador 32 Bits como artifício para didática. Essa simulação será executada em um ambiente x86-64 e um arquivo contendo um código de máquina será oferecida como a entrada e, por intermédio do simulador projetado conforme as regras de arquitetura d o PicoQuick, gerará um relatório detalhado da execução e do estado final do sistema.
 
 Esta documentação contará com informações técnicas valiosas de como cada átimo deste projeto funciona e assim servindo como material de apoio técnico-didático para disciplinas como arquitetura de computadores e sistemas operacionais.
 
-
 \section{Estruturas de Dados}
 
-O projeto está organizado de uma maneira que se assimila ao paradigma de objetos, utilizando de \texttt{structs} para isso. Como legenda, saiba que, para todo campo de um \texttt{struct} que foi citado, em parênteses estará seu tipo.
+O projeto está organizado de uma maneira que semelhante ao paradigma de objetos, utilizando de \texttt{structs} para isso. Como legenda, saiba que, para todo campo de um \texttt{struct} que foi citado, em parênteses estará seu tipo.
 
 \subsection{Memória}
 
-Para a memória, um \texttt{struct} contendo dois campos foi utilizado.
+Para a memória, um \texttt{struct} contendo múltiplos campos foi utilizado:
 
 \begin{enumerate}
 \item \texttt{mem8} (\texttt{uint8\_t})
   \begin{description}
-  \item Simula a memória de 256 bytes do processador.
+  \item Representa um byte de memória.
   \end{description}
 \item \texttt{size} (\texttt{uint32\_t})
   \begin{description}
-  \item Indica a quantidade de memória a ser alocada pelo interpretador.
+  \item Indica o tamanho atual da instância de memória. Usado para inicialização, com um valor personalizado.
   \end{description}
+\item \texttt{loaded} (\texttt{bool})
+  \begin{description}
+  \item Indica se esta instância de memória foi carregada.
+    \end{description}
 \end{enumerate}
 
-Os tipos usados vem do header \texttt{<stdint.h>}, e portanto possuem larguras fixas independentemente da implementação.
+Os tipos \texttt{uint} utilizados vem do header \texttt{<stdint.h>}, e portanto possuem larguras fixas, independentemente da implementação.
 
 \subsection{Registradores}
 
-Os registradores não estão organizados numa forma específica para eles, todavia, fazem parte do \texttt{struct} \texttt{Cpu}, que guarda as seguintes informações:
+Os registradores não estão organizados numa forma específica para eles. Todavia, fazem parte do \texttt{struct} \texttt{Cpu}, que guarda as seguintes informações:
 
 \begin{enumerate}
 \item \texttt{pc} (\texttt{uint16\_t})
   \begin{description}
-  \item Indica a quantidade de programas (instruções) que o interpretador está processar.
+  \item Indica a quantidade de programas (instruções) que o interpretador está a processar.
   \end{description}
 \item \texttt{r[REG\_COUNT]} (\texttt{uint32\_t})
   \begin{description}
@@ -106,9 +116,13 @@ Os registradores não estão organizados numa forma específica para eles, todav
   \end{description}
 \end{enumerate}
 
+Um dos campos foi omitido, mas ele será logo explicado.
+
 \subsection{Flags}
 
-As flags, assim como os registradores, fazem parte da definição da CPU.
+As \texttt{flags}, assim como os registradores, fazem parte da definição da CPU.
+
+Elas são manipuladas pela função \texttt{update\_flags}. Como exigido pelo documento, as flags são \texttt{L} (\textit{Less}), \texttt{E} (\textit{Equal}) e \texttt{G} (\textit{Greater}).
 
 \section{Lógica Principal}
 
@@ -127,9 +141,11 @@ Texto aqui.
 Texto aqui.
 
 \section{Decisões}
+
 A primeira decisão que fora introduzida por Francisco Passos e aceita pelo grupo, estava na subdivisão da liderança em que aquele que se destacasse em alguma parte do projeto seria quem ditaria as ordens, seja de organização e/ou planejamento como um todo no seu setor de atuação do mesmo. Com este princípio em mente, O Gabriel ficou responsável pela liderança na documentação do projeto pois o mesmo já apresentava experiência com LaTeX. Já o Vinícios, ficou responsável pelo projeto por ser o mais ``mão na massa'' e já ter uma experiência acadêmica ``de ouro'' e, por fim, Francisco ficou responsável pelo GitHub e permanecendo com a responsabilidade de chefe de equipe analizando o desenvolvimento de todo o projeto.
 
 A segunda decisão foi a escolha da resolução do problema C. O principal motivo foi que todos do grupo já haviam tido experiência com a linguagem C e isso tornava o problema C como a escolha mais conveniente para os bons caminhos do grupo. Mesmo que algum membro não trabalhasse diretamente no simulador, o mesmo teria a capacidade de compreender as etapas de sua construção.
+
 \section{Referências}
 
 (JAKE BOX (ED.). \textbf{Perfect Emacs Org Mode Exports to LaTeX – Straightforward Emacs}. 7 Mar. 2021. Disponível em: <\url{https://www.youtube.com/watch?v=0qHloGTT8XE}>. Acesso em: 13 nov. 2024)
