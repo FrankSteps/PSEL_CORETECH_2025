@@ -3,6 +3,7 @@
     ele cria, carrega, lê e destrói a memória usada pela CPU simulada.
 */
 
+// implementando o mem.h para usar as operações básicas aqui
 #include "mem.h"
 
 #include <stdlib.h>
@@ -10,8 +11,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+// struct da memória contendo as variáveis básicas para o funcionamento da mesma
 typedef struct Memory {
-    uint8_t* mem8;
+    uint8_t* mem8; // <- expliquem melhor sobre cada uma, por favor :: ass: Francisco <3
     uint32_t size;
     bool loaded;
 } Memory;
