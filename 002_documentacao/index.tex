@@ -78,33 +78,37 @@ Esta documentação contará com informações técnicas valiosas de como cada �
 
 \section{Estruturas de Dados}
 
-O projeto está organizado de uma maneira que se assimila ao paradigma de objetos, utilizando de \texttt{structs} para isso. Como legenda, saiba que, para todo campo de um \texttt{struct} que foi citado, em parênteses estará seu tipo.
+O projeto está organizado de uma maneira que semelhante ao paradigma de objetos, utilizando de \texttt{structs} para isso. Como legenda, saiba que, para todo campo de um \texttt{struct} que foi citado, em parênteses estará seu tipo.
 
 \subsection{Memória}
 
-Para a memória, um \texttt{struct} contendo dois campos foi utilizado.
+Para a memória, um \texttt{struct} contendo múltiplos campos foi utilizado:
 
 \begin{enumerate}
 \item \texttt{mem8} (\texttt{uint8\_t})
   \begin{description}
-  \item Simula a memória de 256 bytes do processador.
+  \item Representa um byte de memória.
   \end{description}
 \item \texttt{size} (\texttt{uint32\_t})
   \begin{description}
-  \item Indica a quantidade de memória a ser alocada pelo interpretador.
+  \item Indica o tamanho atual da instância de memória. Usado para inicialização, com um valor personalizado.
   \end{description}
+\item \texttt{loaded} (\texttt{bool})
+  \begin{description}
+  \item Indica se esta instância de memória foi carregada.
+    \end{description}
 \end{enumerate}
 
-Os tipos usados vem do header \texttt{<stdint.h>}, e portanto possuem larguras fixas independentemente da implementação.
+Os tipos \texttt{uint} utilizados vem do header \texttt{<stdint.h>}, e portanto possuem larguras fixas, independentemente da implementação.
 
 \subsection{Registradores}
 
-Os registradores não estão organizados numa forma específica para eles, todavia, fazem parte do \texttt{struct} \texttt{Cpu}, que guarda as seguintes informações:
+Os registradores não estão organizados numa forma específica para eles. Todavia, fazem parte do \texttt{struct} \texttt{Cpu}, que guarda as seguintes informações:
 
 \begin{enumerate}
 \item \texttt{pc} (\texttt{uint16\_t})
   \begin{description}
-  \item Indica a quantidade de programas (instruções) que o interpretador está processar.
+  \item Indica a quantidade de programas (instruções) que o interpretador está a processar.
   \end{description}
 \item \texttt{r[REG\_COUNT]} (\texttt{uint32\_t})
   \begin{description}
@@ -112,9 +116,13 @@ Os registradores não estão organizados numa forma específica para eles, todav
   \end{description}
 \end{enumerate}
 
+Um dos campos foi omitido, mas ele será logo explicado.
+
 \subsection{Flags}
 
-As flags, assim como os registradores, fazem parte da definição da CPU.
+As \texttt{flags}, assim como os registradores, fazem parte da definição da CPU.
+
+Elas são manipuladas pela função \texttt{update\_flags}. Como exigido pelo documento, as flags são \texttt{L} (\textit{Less}), \texttt{E} (\textit{Equal}) e \texttt{G} (\textit{Greater}).
 
 \section{Lógica Principal}
 
