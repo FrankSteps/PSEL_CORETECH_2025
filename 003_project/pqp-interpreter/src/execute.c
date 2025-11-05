@@ -1,13 +1,17 @@
 #include "cpu_internals.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+
+#include "mem.h" 
 
 void exec_movi(Cpu* cpu, Memory* mem, Instruction* instruction) {
-
+    cpu->r[instruction->reg_x] = (uint32_t)((int16_t)instruction->immediate);
 }
 
 void exec_mov(Cpu* cpu, Memory* mem, Instruction* instruction) {
-
+    cpu->r[instruction->reg_x] = cpu->r[instruction->reg_y];
 }
 
 void exec_mov_rmem(Cpu* cpu, Memory* mem, Instruction* instruction) {
@@ -39,7 +43,8 @@ void exec_je(Cpu* cpu, Memory* mem, Instruction* instruction) {
 }
 
 void exec_add(Cpu* cpu, Memory* mem, Instruction* instruction) {
-    
+    uint32_t result = (uint32_t)instruction->reg_x + (uint32_t)instruction->reg_y;
+    cpu->r[instruction->reg_x] = (uint32_t)result;
 }
 
 void exec_sub(Cpu* cpu, Memory* mem, Instruction* instruction) {
@@ -90,11 +95,7 @@ void execute(Cpu* cpu, Memory* mem, Instruction instruction) {
     void (*handler)(Cpu*, Memory*, Instruction*) = instruction_exec_table[opcode];
 
     handler(cpu, mem, &instruction);
-#include "execute.h"
-#include "mem.h" 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
+}
 
 #define HALT_PC 0xFFFFFFFF
 
