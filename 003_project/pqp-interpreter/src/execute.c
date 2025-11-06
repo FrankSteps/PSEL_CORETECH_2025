@@ -6,6 +6,18 @@
 
 #include "mem.h" 
 
+typedef enum flags_t { G, L, E } flags_t;
+
+// Função utilitária para atualizar as flags L (Less), E (Equal), G (Greater)
+void cpu_update_flags(Cpu* cpu, flags_t flag) {
+    cpu->flags = 0x00;
+    switch (flag) {
+        case E: cpu->flags |= (1 << 0); break; // Zero flag (E)
+        case L: cpu->flags |= (1 << 1); break; // Less flag (L)
+        case G: cpu->flags |= (1 << 2); break; // Greater flag (G)
+    }
+}
+
 void exec_movi(Cpu* cpu, Memory* mem, Instruction* instruction) {
     cpu->r[instruction->reg_x] = (uint32_t)((int16_t)instruction->immediate);
 }
@@ -23,7 +35,7 @@ void exec_mov_memr(Cpu* cpu, Memory* mem, Instruction* instruction) {
 }
 
 void exec_cmp(Cpu* cpu, Memory* mem, Instruction* instruction) {
-    
+    //instruction->reg_x == instruction->reg_y ? 
 }
 
 void exec_jmp(Cpu* cpu, Memory* mem, Instruction* instruction) {
@@ -43,12 +55,13 @@ void exec_je(Cpu* cpu, Memory* mem, Instruction* instruction) {
 }
 
 void exec_add(Cpu* cpu, Memory* mem, Instruction* instruction) {
-    uint32_t result = (uint32_t)instruction->reg_x + (uint32_t)instruction->reg_y;
-    cpu->r[instruction->reg_x] = (uint32_t)result;
+    uint32_t add = (uint32_t)instruction->reg_x + (uint32_t)instruction->reg_y;
+    cpu->r[instruction->reg_x] = (uint32_t)add;
 }
 
 void exec_sub(Cpu* cpu, Memory* mem, Instruction* instruction) {
-    
+    uint32_t sub = (uint32_t)instruction->reg_x - (uint32_t)instruction->reg_y;
+    cpu->r[instruction->reg_x] = (uint32_t)sub;
 }
 
 void exec_and(Cpu* cpu, Memory* mem, Instruction* instruction) {
@@ -98,27 +111,6 @@ void execute(Cpu* cpu, Memory* mem, Instruction instruction) {
 }
 
 #define HALT_PC 0xFFFFFFFF
-
-// Função utilitária para atualizar as flags L (Less), E (Equal), G (Greater)
-void update_flags(Cpu* cpu, int32_t result) {
-    // Zero flag (E)
-    cpu->flags &= ~(1 << 0); 
-    if (result == 0) {
-        cpu->flags |= (1 << 0); 
-    }
-
-    // Less flag (L)
-    cpu->flags &= ~(1 << 1); 
-    if (result < 0) {
-        cpu->flags |= (1 << 1); 
-    }
-
-    // Greater flag (G)
-    cpu->flags &= ~(1 << 2); 
-    if (result > 0) {
-        cpu->flags |= (1 << 2); 
-    }
-}
 
 // A função principal de execução.
 void execute_instruction(Cpu* cpu, const Instruction* instruction) {
