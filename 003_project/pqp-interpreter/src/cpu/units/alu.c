@@ -11,6 +11,8 @@ void cpu_update_flags(Cpu* cpu, flags_t flag) {
     }
 }
 
+
+// As funções abaixo realizam as operações específicas de cada instrução da CPU. Cada função recebe a CPU, a memória e a instrução decodificada, e executa a operação correspondente.
 void exec_cmp(Cpu* cpu, Memory* mem, Instruction* instruction) {
     Instruction* i = instruction;
     uint8_t result = (i->reg_x > i->reg_y ? G : (i->reg_x < i->reg_y ? L : E));
