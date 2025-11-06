@@ -78,7 +78,7 @@ Esta documentação contará com informações técnicas valiosas de como cada �
 
 \section{Estruturas de Dados}
 
-O projeto está organizado de uma maneira que semelhante ao paradigma de objetos, utilizando de \texttt{structs} para isso. Como legenda, saiba que, para todo campo de um \texttt{struct} que foi citado, em parênteses estará seu tipo.
+O projeto está organizado de uma maneira semelhante ao paradigma orientado a objetos, utilizando de \texttt{structs} para isso. Como legenda, saiba que, para todo campo de um \texttt{struct} que foi citado, em parênteses estará seu tipo.
 
 \subsection{Memória}
 
@@ -99,7 +99,34 @@ Para a memória, um \texttt{struct} contendo múltiplos campos foi utilizado:
   \end{description}
 \end{enumerate}
 
+\subsubsection{Funções}
+
 Os tipos \texttt{uint} utilizados vem do header \texttt{<stdint.h>}, e portanto possuem larguras fixas, independentemente da implementação.
+
+Funções que acompanham esse \texttt{struct} são:
+
+\begin{itemize}
+\item \texttt{mem\_create} (\texttt{Memory*})
+  \begin{description}
+  \item Cria uma nova instância de memória. Recebe como argumento \texttt{size}, alocando quantidade de memória indicado por ele, com alinhamento de 1 byte.
+  \end{description}
+\item \texttt{mem\_destroy} (\texttt{void})
+  \begin{description}
+  \item \textit{Wrapper} para a função \texttt{free}.
+  \end{description}
+\item \texttt{mem\_load\_program} (\texttt{void})
+  \begin{description}
+  \item Dada uma instância de memória \texttt{mem} e um caminho de diretório \texttt{input\_path}, essa função carrega o arquivo na memória.
+  \end{description}
+\item \texttt{mem\_read8} (\texttt{uint16\_t})
+  \begin{description}
+  \item Lê um byte de memória.
+  \end{description}
+\item \texttt{mem\_read32} (\texttt{uint32\_t})
+  \begin{description}
+  \item Lê quatro bytes de memória.
+  \end{description}
+\end{itemize}
 
 \subsection{Registradores}
 
