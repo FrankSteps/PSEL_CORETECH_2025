@@ -38,10 +38,16 @@ Cpu* cpu_create() {
 
 // Função responsável pelo ciclo da CPU
 void cpu_cycle(Cpu* cpu, Memory* mem) {
+    if (cpu->pc == EXIT) return false;
+
     uint32_t machine_code = fetch(mem, cpu);
     Instruction instruction = decode(machine_code);
 
     execute(cpu, mem, instruction);
+
+    // Avança para a próxima instrução
+    cpu->pc += 4;
+    return true;
 }
 
 // libera a memória que fora usada pela CPU

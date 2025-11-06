@@ -5,6 +5,8 @@
 #include "mem.h"
 
 #define REG_COUNT 16
+#define NUM_OPCODES 16     // quantidade de instruções possíveis
+#define EXIT 0xF0F0     // endereço de término da simulação
 
 typedef struct Cpu {
     uint32_t pc;

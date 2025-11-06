@@ -13,9 +13,9 @@
 
 // struct da memória contendo as variáveis básicas para o funcionamento da mesma
 typedef struct Memory {
-    uint8_t* mem8; // <- expliquem melhor sobre cada uma, por favor :: ass: Francisco <3
-    uint32_t size;
-    bool loaded;
+    uint8_t* mem8; // definição de vetor de dados em RAM com alinhamento byte a byte
+    uint32_t size; // tamanho da memória definido na inicialização
+    bool loaded; // flag para verificação de programa disponível na memória
 } Memory;
 
 // Função responsável pela criação da memória
@@ -32,6 +32,11 @@ Memory* mem_create(uint32_t size) {
     mem->size = size;
     mem->mem8 = (uint8_t*)calloc(mem->size, sizeof(uint8_t));
     mem->loaded = false;
+
+    if (!mem->mem8) {
+        printf("**Erro ao alocar memoria (dados).\n");
+        return NULL;
+    }
 
     return mem;
 }
@@ -72,16 +77,41 @@ uint8_t mem_read8(Memory* mem, uint16_t address) {
 }
 
 
-// Função responsável por ler quatro bytes da memória
-uint32_t mem_read32(Memory* mem, uint16_t address) {
+/*
+    Função responsável por ler (load) quatro bytes da memória.
+    Utiliza convenção big endian para carregamento do programa e
+    little endian para a leitura em tempo de execução.
+*/
+uint32_t mem_read32(Memory* mem, uint16_t address, bool executing) {
     uint8_t buffer[4] = {0};
     uint32_t content = 0x0;
 
     for (uint16_t i = 0; i < 3; i++) {
         buffer[i] = mem_read8(mem, address + i);
-        content |= buffer[i] << 8*(3-i);
+        // O parâmetro 'executing' define endianess da leitura
+        content |= buffer[i] << (executing ? 8*i : 8*(3-i));
     }
 
     return content;
 }
 
+
+// Função auxiliar que lê um byte da memória
+void mem_write8(Memory* mem, uint16_t address, uint8_t data) {
+    mem->mem8[address] = data;
+}
+
+
+/*
+    Função responsável por escrever (store) quatro bytes na memória
+    Realiza a escrita conforme convenção little endian
+*/ 
+void mem_write32(Memory* mem, uint16_t address, uint32_t data) {
+    uint8_t buffer[4] = {0};
+
+    for (uint8_t i = 0; i < 3; i++) {
+        // Itera de modo a pôr o byte mais sig. de 'data' no final
+        buffer[i] = (uint8_t)(data & (0xFF << 8*i));
+        mem_write8(mem, address + i, buffer[i]);
+    }
+}
