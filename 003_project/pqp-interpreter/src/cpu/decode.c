@@ -4,18 +4,21 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+// Esta função está com a tabela de instruções associa o(s) opcode(s) a um tipo de instrução
 const inst_type_t instruction_table[16] = {
-    [0x00] = IMMEDIATE,
-    [0x01 ... 0x04] = MOV,
-    [0x05 ... 0x08] = JUMP,
-    [0x09 ... 0x0D] = ARITHMETIC_LOGIC,
-    [0x0E ... 0x0F] = SHIFT
+    [0x00] = IMMEDIATE,                   // imediata
+    [0x01 ... 0x04] = MOV,                // movimento
+    [0x05 ... 0x08] = JUMP,               // salto
+    [0x09 ... 0x0D] = ARITHMETIC_LOGIC,   // lógica aritmética (or, and, xor...)
+    [0x0E ... 0x0F] = SHIFT               // shift
 };
 
+// Função responsável por receber a instrução retornar o tipo específico da mesma
 inst_type_t decode_instruction_type(uint8_t opcode) {
     return (opcode <= 0x0F ? instruction_table[opcode] : INVALID);
 }
 
+// Descrevam melhor como essa função trabalha. Não entendi muito bem - ass: Francisco
 void decode_operators(Instruction* instruction, inst_type_t type, uint32_t code) {
     uint32_t i16 = 0x0, i5 = 0x0;
 
@@ -54,6 +57,7 @@ void decode_operators(Instruction* instruction, inst_type_t type, uint32_t code)
     }
 }
 
+// Esta função está responsável por decodificar a instrução da memória e transformar em uma estrutura para CPU trabalhar em cima.
 Instruction decode(uint32_t code) {
     Instruction instruction = {0};
     instruction.opcode = (code & 0xFF000000) >> 24;
@@ -69,5 +73,6 @@ Instruction decode(uint32_t code) {
         instruction.immediate
     );
 
+    // retornando a instrução
     return instruction;
 }
