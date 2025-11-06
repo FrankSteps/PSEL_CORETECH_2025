@@ -6,6 +6,7 @@
 
 #include "mem.h"
 
+// tabela de instruções. Cada instrução está sendo ligada a um código hexadecimal
 const void* instruction_exec_table[16] = {
     [0x00] = exec_movi,
     [0x01] = exec_mov,
@@ -25,6 +26,7 @@ const void* instruction_exec_table[16] = {
     [0x0F] = exec_sar
 };
 
+// Função responsável por receber a instrução e chamar a função ligada à mesma respeitando a orientação da tabela acima.
 void execute(Cpu* cpu, Memory* mem, Instruction instruction) {
     uint8_t opcode = instruction.opcode;
     void (*handler)(Cpu*, Memory*, Instruction*) = instruction_exec_table[opcode];
