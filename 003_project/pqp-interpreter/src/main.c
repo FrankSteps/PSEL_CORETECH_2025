@@ -21,8 +21,8 @@
 int main(int argc, char* argv[]) {
     // confirmando se o usuário passou o caminho para os arquivos da forma devida. 
     // (caminho para o input e para o output)
-    if (argc < 3) {
-        printf("Usage: main /path/to/input /path/to/output\n");
+    if (argc < 2) {
+        printf("Usage: main /path/to/input\n");
         exit(EXIT_FAILURE);
     }
 
@@ -33,7 +33,13 @@ int main(int argc, char* argv[]) {
 
     //carregar a entrada do programa
     mem_load_program(mem, argv[1]);
-    cpu_cycle(cpu, mem);
+
+    // Lógica de execução do programa
+    bool run = true;
+    while (run) {
+        cpu_cycle(cpu, mem);
+        run = !cpu_simulation_finished(cpu);
+    }
 
     // encerrando o programa
     return 0;

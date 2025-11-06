@@ -15,5 +15,6 @@ typedef struct Cpu Cpu;
 Cpu* cpu_create();
 void cpu_destroy(Cpu* cpu);
 void cpu_cycle(Cpu* cpu, Memory* mem);
+bool cpu_simulation_finished(Cpu* cpu);
 
 #endif
