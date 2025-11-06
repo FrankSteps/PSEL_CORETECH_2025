@@ -1,3 +1,8 @@
+/*
+Este arquivo é o núcleo do projeto, pois é responsável por definir a estrutura da CPU, constantes, flags, tipos de intruções e entre 
+outros artifícios que serão usados pelos arquivos .c do pqp-interpreter.
+*/
+
 #ifndef CPU_INTERNALS
 #define CPU_INTERNALS
 
