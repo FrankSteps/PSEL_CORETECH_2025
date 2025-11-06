@@ -28,9 +28,10 @@
 \usepackage{fvextra} % Melhorias para blocos de código.
 \usepackage{tcolorbox} % Caixas legais que podem ser usadas para colocar código dentro.
 \usepackage{calc} % Matemática em comandos.
+\usepackage{hyperref} % Comando para adicionar links no documento
 \hypersetup {
   pdfauthor={Grupo 1},
-  pdftitle={Problema C: Implementação de um interpretador feito em C++ para a arquitetura PicoQuickProcessor},
+  pdftitle={Problema C: Implementação de um interpretador feito em C para a arquitetura PicoQuickProcessor},
   pdfkeywords={},
   pdfsubject={},
   pdfcreator={TeX Live 2025},
@@ -41,7 +42,7 @@
 
 \author{Grupo 1}
 \date{\today}
-\title{Problema C: Implementação de um interpretador feito em C++ para a arquitetura PicoQuickProcessor}
+\title{Problema C: Implementação de um interpretador feito em C para a arquitetura PicoQuickProcessor}
 
 % Documento.
 
@@ -64,7 +65,7 @@
     Gabriel Santos de Souza & Engenharia da Computação\\
     Guilherme Ferreira Amâncio & Ciência da Computação\\
     Rhuan Pablo Silva Santos & Engenharia da Computação\\
-    João Vinicíus de Almeida Argolô & Engenharia da Computação\\
+    João Vinícius de Almeida Argolô & Engenharia da Computação\\
   \end{tabular}
 \end{center}
 
@@ -155,23 +156,40 @@ Elas são manipuladas pela função \texttt{update\_flags}. Como exigido pelo do
 
 Texto aqui.
 
-\section{Implementação de Instruções Complexas}
-
-Texto aqui.
-
-\section{Coleta de Dados}
-
-Texto aqui.
 
 \section{Desafios}
+	O principal desafio foi o tempo. O projeto demandou muito esforço e agilidade para o seu planejamento, execução, direção e documentação. Além deste, para tornar o projeto mais didático e mais auto-explicativo, foi necessário um amplo conhecimento e experiência na linguagem C, arquitetura de computadores e sistemas operacionais. Aplicações como: arquitetura, design do código pra otimização e organização e a desenvoltura do modulo foram um dos principais desafios como mencionou Vinícius.
+	Os contra-tempos não se voltaram apenas ao projeto, como também à liderança do grupo para que o mesmo fosse o mais produtivo possível.  
 
-Texto aqui.
 
 \section{Decisões}
 
-A primeira decisão que fora introduzida por Francisco Passos e aceita pelo grupo, estava na subdivisão da liderança em que aquele que se destacasse em alguma parte do projeto seria quem ditaria as ordens, seja de organização e/ou planejamento como um todo no seu setor de atuação do mesmo. Com este princípio em mente, O Gabriel ficou responsável pela liderança na documentação do projeto pois o mesmo já apresentava experiência com LaTeX. Já o Vinícios, ficou responsável pelo projeto por ser o mais ``mão na massa'' e já ter uma experiência acadêmica ``de ouro'' e, por fim, Francisco ficou responsável pelo GitHub e permanecendo com a responsabilidade de chefe de equipe analizando o desenvolvimento de todo o projeto.
+A primeira decisão, introduzida por Francisco Passos e aceita pelo grupo, consistiu na subdivisão da liderança, de modo que aquele que se destacasse em determinada parte do projeto seria o responsável por ditar as diretrizes de organização e/ou planejamento dentro de seu setor de atuação. Com esse princípio em mente, Gabriel ficou responsável pela liderança da documentação do projeto, visto que já possuía experiência com LaTeX. Vinícius, por sua vez, assumiu a liderança da execução prática do projeto, por ser o membro mais “mão na massa” e já possuir uma experiência acadêmica maior que os demais. Por fim, Francisco ficou encarregado por gerenciar o repositório no GitHub, mantendo-se como chefe de equipe e responsável por acompanhar o desenvolvimento geral do projeto tanto do software, como da documentação. 
 
-A segunda decisão foi a escolha da resolução do problema C. O principal motivo foi que todos do grupo já haviam tido experiência com a linguagem C e isso tornava o problema C como a escolha mais conveniente para os bons caminhos do grupo. Mesmo que algum membro não trabalhasse diretamente no simulador, o mesmo teria a capacidade de compreender as etapas de sua construção.
+A segunda decisão foi a escolha pela resolução do Problema C. O principal motivo foi o fato de que todos os integrantes do grupo já possuíam experiência com a linguagem C, o que tornava o Problema C a escolha mais conveniente para o bom andamento do projeto. Mesmo que algum membro não atuasse diretamente no simulador, teria ainda assim a capacidade de compreender as etapas de sua construção.
+
+Por fim, a terceira e última decisão, tomada por Vinícius — líder da execução do projeto —, dizia respeito à organização do código em C do pqp-interpreter. A estrutura do código foi elaborada de forma a ser o mais didática possível, com o desenvolvimento dividido em etapas bem definidas, o que contribuiu significativamente para a legibilidade e manutenção do projeto. Essa decisão representou um dos maiores desafios enfrentados, conforme mencionado na seção de desafios.
+
+
+\section{Aprendizado como uma unidade}
+
+O grupo uniu-se sob a filosofia de pensar como uma unidade. Cada integrante contribuiu com o que pôde, utilizando os artifícios que possuía. O objetivo não foi buscar o melhor resultado absoluto, mas sim realizar o necessário com as condições disponíveis — o essencial. Os participantes que aceitaram o desafio empenharam-se para alcançar o melhor resultado possível, tanto para si quanto para o grupo.
+
+\begin{quote}
+“Adam Smith disse que a melhoria individual servia à conquista do grupo.  
+Mas isso é incompleto. O melhor resultado ocorre quando todos no grupo fazem o que é melhor para si e para o grupo.”
+\end{quote}
+\hfill \textit{John Nash, ganhador do prêmio Nobel de economia em 1994}
+
+
+\section{Repositório do projeto no GitHub}
+
+O código-fonte e demais arquivos do projeto estão disponíveis publicamente no seguinte repositório:
+
+\begin{center}
+\url{https://github.com/FrankSteps/PSEL_CORETECH_2025}
+\end{center}
+
 
 \section{Referências}
 
