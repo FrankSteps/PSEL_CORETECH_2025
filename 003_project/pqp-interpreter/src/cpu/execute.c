@@ -6,7 +6,7 @@
 
 #include "mem.h"
 
-// tabela de instruções. Cada instrução está sendo ligada a um código hexadecimal
+// tabela de instruções. Cada instrução está sendo ligada a um opcode
 const void* instruction_exec_table[16] = {
     [0x00] = exec_movi,
     [0x01] = exec_mov,
