@@ -3,8 +3,9 @@ BUILD_DIR = build
 TARGET = $(BUILD_DIR)/pqp-interpreter
 
 FLAGS = -Wall -O3 -g -Iinclude
+UNIT_FLAGS = -Isrc/cpu
 
-OBJECTS = main.o cpu.o mem.o fetch.o decode.o execute.o
+OBJECTS = main.o cpu.o mem.o fetch.o decode.o execute.o alu.o lsu.o jump.o
 
 all: $(OBJECTS)
 	mkdir -p $(BUILD_DIR)
@@ -14,20 +15,29 @@ all: $(OBJECTS)
 main.o: src/main.c
 	gcc $(FLAGS) -c src/main.c -o main.o
 
-cpu.o: src/cpu.c
-	gcc $(FLAGS) -c src/cpu.c -o cpu.o
+cpu.o: src/cpu/cpu.c
+	gcc $(FLAGS) -c src/cpu/cpu.c -o cpu.o
 
 mem.o: src/mem.c
 	gcc $(FLAGS) -c src/mem.c -o mem.o
 
-fetch.o: src/fetch.c
-	gcc $(FLAGS) -c src/fetch.c -o fetch.o
+fetch.o: src/cpu/fetch.c
+	gcc $(FLAGS) -c src/cpu/fetch.c -o fetch.o
 
-decode.o: src/decode.c
-	gcc $(FLAGS) -c src/decode.c -o decode.o
+decode.o: src/cpu/decode.c
+	gcc $(FLAGS) -c src/cpu/decode.c -o decode.o
 
-execute.o: src/execute.c
-	gcc $(FLAGS) -c src/execute.c -o execute.o
+execute.o: src/cpu/execute.c
+	gcc $(FLAGS) -c src/cpu/execute.c -o execute.o
+
+alu.o: src/cpu/units/alu.c
+	gcc $(FLAGS) $(UNIT_FLAGS) -c src/cpu/units/alu.c -o alu.o
+
+lsu.o: src/cpu/units/lsu.c
+	gcc $(FLAGS) $(UNIT_FLAGS) -c src/cpu/units/lsu.c -o lsu.o
+
+jump.o: src/cpu/units/jump.c
+	gcc $(FLAGS) $(UNIT_FLAGS) -c src/cpu/units/jump.c -o jump.o
 
 clean:
 	rm -rf $(BUILD_DIR) $(OBJECTS)

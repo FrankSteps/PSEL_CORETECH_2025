@@ -49,7 +49,7 @@ void decode_operators(Instruction* instruction, inst_type_t type, uint32_t code)
             instruction->immediate = i5;
             return;
         case INVALID:
-            printf("** Leitura de instrucao invalida.");
+            printf("** Leitura de instrucao invalida.\n");
             exit(EXIT_FAILURE);
     }
 }
