@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// incluindo as instruções base da memória
+// incluindo as instruções base da memória/logger
 #include "mem.h"
 
 // Função responsável pela criação da CPU
@@ -37,11 +37,11 @@ Cpu* cpu_create() {
 }
 
 // Função responsável pelo ciclo da CPU
-void cpu_cycle(Cpu* cpu, Memory* mem) {
+void cpu_cycle(Cpu* cpu, Memory* mem, Logger* l) {
     uint32_t machine_code = fetch(mem, cpu);
     Instruction instruction = decode(machine_code);
 
-    execute(cpu, mem, instruction);
+    execute(cpu, mem, instruction, l);
 
     // Avança para a próxima instrução
     cpu->pc += 4;

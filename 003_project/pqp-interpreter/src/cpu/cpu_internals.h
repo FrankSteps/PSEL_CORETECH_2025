@@ -8,6 +8,7 @@ outros artifícios que serão usados pelos arquivos .c do pqp-interpreter.
 
 #include <stdint.h>
 #include "mem.h"
+#include "logger.h"
 
 #define REG_COUNT 16    // quantidade de registradores
 #define NUM_OPCODES 16     // quantidade de instruções possíveis
@@ -40,28 +41,28 @@ extern const void* instruction_exec_table[16];
 
 uint32_t fetch(Memory* mem, Cpu* cpu);
 Instruction decode(uint32_t code);
-void execute(Cpu* cpu, Memory* mem, Instruction instruction);
+void execute(Cpu* cpu, Memory* mem, Instruction instruction, Logger* l);
 
 // instruções da lsu (load-store unit)
-void exec_movi(Cpu* cpu, Memory* mem, Instruction* instruction);
-void exec_mov(Cpu* cpu, Memory* mem, Instruction* instruction);
-void exec_mov_rmem(Cpu* cpu, Memory* mem, Instruction* instruction);
-void exec_mov_memr(Cpu* cpu, Memory* mem, Instruction* instruction);
+void exec_movi(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
+void exec_mov(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
+void exec_mov_rmem(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
+void exec_mov_memr(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
 
 // instruções da alu (arithmetic logic unit)
-void exec_cmp(Cpu* cpu, Memory* mem, Instruction* instruction);
-void exec_add(Cpu* cpu, Memory* mem, Instruction* instruction);
-void exec_sub(Cpu* cpu, Memory* mem, Instruction* instruction);
-void exec_and(Cpu* cpu, Memory* mem, Instruction* instruction);
-void exec_or(Cpu* cpu, Memory* mem, Instruction* instruction);
-void exec_xor(Cpu* cpu, Memory* mem, Instruction* instruction);
-void exec_sal(Cpu* cpu, Memory* mem, Instruction* instruction);
-void exec_sar(Cpu* cpu, Memory* mem, Instruction* instruction);
+void exec_cmp(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
+void exec_add(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
+void exec_sub(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
+void exec_and(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
+void exec_or(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
+void exec_xor(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
+void exec_sal(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
+void exec_sar(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
 
 // instruções de desvio/jump
-void exec_jmp(Cpu* cpu, Memory* mem, Instruction* instruction);
-void exec_jg(Cpu* cpu, Memory* mem, Instruction* instruction);
-void exec_jl(Cpu* cpu, Memory* mem, Instruction* instruction);
-void exec_je(Cpu* cpu, Memory* mem, Instruction* instruction);
+void exec_jmp(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
+void exec_jg(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
+void exec_jl(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
+void exec_je(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l);
 
 #endif

@@ -7,21 +7,21 @@
 #include "mem.h"
 
 // Faz um jump incondicional
-void exec_jmp(Cpu* cpu, Memory* mem, Instruction* instruction) {
+void exec_jmp(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     cpu->pc += (uint32_t)instruction->immediate;
 }
 
 // Faz um jump condicional se maior
-void exec_jg(Cpu* cpu, Memory* mem, Instruction* instruction) {
-    if (cpu->flags & (1 << G_SHIFT)) exec_jmp(cpu, mem, instruction); 
+void exec_jg(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
+    if (cpu->flags & (1 << G_SHIFT)) exec_jmp(cpu, mem, instruction, l); 
 }
 
 // Faz um jump condicional se menor
-void exec_jl(Cpu* cpu, Memory* mem, Instruction* instruction) {
-    if (cpu->flags & (1 << L_SHIFT)) exec_jmp(cpu, mem, instruction); 
+void exec_jl(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
+    if (cpu->flags & (1 << L_SHIFT)) exec_jmp(cpu, mem, instruction, l); 
 }
 
 // Faz um jump condicional se igual
-void exec_je(Cpu* cpu, Memory* mem, Instruction* instruction) {
-    if (cpu->flags & (1 << E_SHIFT)) exec_jmp(cpu, mem, instruction); 
+void exec_je(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
+    if (cpu->flags & (1 << E_SHIFT)) exec_jmp(cpu, mem, instruction, l); 
 }

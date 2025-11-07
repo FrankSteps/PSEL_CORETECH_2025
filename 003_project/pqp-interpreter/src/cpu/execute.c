@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 #include "mem.h"
+#include "logger.h"
 
 // tabela de instruções. Cada instrução está sendo ligada a um opcode
 const void* instruction_exec_table[16] = {
@@ -27,9 +28,9 @@ const void* instruction_exec_table[16] = {
 };
 
 // Função responsável por receber a instrução e chamar a função ligada à mesma respeitando a orientação da tabela acima.
-void execute(Cpu* cpu, Memory* mem, Instruction instruction) {
+void execute(Cpu* cpu, Memory* mem, Instruction instruction, Logger* l) {
     uint8_t opcode = instruction.opcode;
-    void (*handler)(Cpu*, Memory*, Instruction*) = instruction_exec_table[opcode];
+    void (*handler)(Cpu*, Memory*, Instruction*, Logger*) = instruction_exec_table[opcode];
 
-    handler(cpu, mem, &instruction);
+    handler(cpu, mem, &instruction, l);
 }

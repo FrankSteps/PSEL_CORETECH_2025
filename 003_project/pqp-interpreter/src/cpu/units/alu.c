@@ -1,5 +1,6 @@
 #include "cpu_internals.h"
 #include "mem.h"
+#include "logger.h"
 
 // Função utilitária para atualizar as flags L (Less), E (Equal), G (Greater)
 void cpu_update_flags(Cpu* cpu, flags_t flag) {
@@ -11,40 +12,192 @@ void cpu_update_flags(Cpu* cpu, flags_t flag) {
     }
 }
 
+// Função utilitária que retorna valores de flags
+uint8_t cpu_get_flag(Cpu* cpu, flags_t flag) {
+    switch (flag) {
+        case E: return (cpu->flags & (1 << E_SHIFT)) >> E_SHIFT; // Zero flag (E)
+        case L: return (cpu->flags & (1 << L_SHIFT)) >> L_SHIFT; // Less flag (L)
+        case G: return (cpu->flags & (1 << G_SHIFT)) > G_SHIFT; // Greater flag (G)
+    }
 
-// As funções abaixo realizam as operações específicas de cada instrução da CPU. Cada função recebe a CPU, a memória e a instrução decodificada, e executa a operação correspondente.
-void exec_cmp(Cpu* cpu, Memory* mem, Instruction* instruction) {
+    return 0;
+}
+
+/*
+    As funções abaixo realizam as operações específicas de cada instrução da CPU. 
+    Cada função recebe a CPU, a memória e a instrução decodificada, e executa a 
+    operação correspondente.
+*/
+
+void exec_cmp(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
+    char log_buffer[LINE_MAX_SIZE];
+    
     Instruction* i = instruction;
-    uint8_t result = (i->reg_x > i->reg_y ? G : (i->reg_x < i->reg_y ? L : E));
+    flags_t result = (cpu->r[i->reg_x] > cpu->r[i->reg_y] ? G
+        : (cpu->r[i->reg_x] < cpu->r[i->reg_y] ? L : E));
+
     cpu_update_flags(cpu, result);
+
+    log_format_cpu_output(
+        log_buffer, 
+        LINE_MAX_SIZE, 
+        i->opcode,
+        cpu->pc,
+        "CMP",
+        i->reg_x,
+        i->reg_y,
+        cpu_get_flag(cpu, G),
+        cpu_get_flag(cpu, L),
+        cpu_get_flag(cpu, E)
+    );
+    // log_add(l, log_buffer);
 }
 
-void exec_add(Cpu* cpu, Memory* mem, Instruction* instruction) {
-    uint32_t add = (uint32_t)instruction->reg_x + (uint32_t)instruction->reg_y;
+void exec_add(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
+    char log_buffer[LINE_MAX_SIZE];
+    uint32_t apriori_rx = cpu->r[instruction->reg_x];
+
+    uint32_t add = cpu->r[instruction->reg_x] + cpu->r[instruction->reg_y];
     cpu->r[instruction->reg_x] = (uint32_t)add;
+
+    log_format_cpu_output(
+        log_buffer, 
+        LINE_MAX_SIZE, 
+        instruction->opcode,
+        cpu->pc,
+        "ADD",
+        instruction->reg_x,
+        instruction->reg_y,
+        apriori_rx,
+        cpu->r[instruction->reg_y],
+        add
+    );
+    // log_add(l, log_buffer);
 }
 
-void exec_sub(Cpu* cpu, Memory* mem, Instruction* instruction) {
-    uint32_t sub = (uint32_t)instruction->reg_x - (uint32_t)instruction->reg_y;
+void exec_sub(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
+    char log_buffer[LINE_MAX_SIZE];
+    uint32_t apriori_rx = cpu->r[instruction->reg_x];
+    
+    uint32_t sub = cpu->r[instruction->reg_x] - cpu->r[instruction->reg_y];
     cpu->r[instruction->reg_x] = (uint32_t)sub;
+
+    log_format_cpu_output(
+        log_buffer, 
+        LINE_MAX_SIZE, 
+        instruction->opcode,
+        cpu->pc,
+        "SUB",
+        instruction->reg_x,
+        instruction->reg_y,
+        apriori_rx,
+        cpu->r[instruction->reg_y],
+        sub
+    );
+    // log_add(l, log_buffer);
 }
 
-void exec_and(Cpu* cpu, Memory* mem, Instruction* instruction) {
-    cpu->r[instruction->reg_x] &= (uint32_t)instruction->reg_y;
+void exec_and(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
+    char log_buffer[LINE_MAX_SIZE];
+    uint32_t apriori_rx = cpu->r[instruction->reg_x];
+    
+    cpu->r[instruction->reg_x] &= cpu->r[instruction->reg_y];
+
+    log_format_cpu_output(
+        log_buffer, 
+        LINE_MAX_SIZE, 
+        instruction->opcode,
+        cpu->pc,
+        "AND",
+        instruction->reg_x,
+        instruction->reg_y,
+        apriori_rx,
+        cpu->r[instruction->reg_y],
+        cpu->r[instruction->reg_x]
+    );
+    // log_add(l, log_buffer);
 }
 
-void exec_or(Cpu* cpu, Memory* mem, Instruction* instruction) {
-    cpu->r[instruction->reg_x] |= (uint32_t)instruction->reg_y;
+void exec_or(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
+    char log_buffer[LINE_MAX_SIZE];
+    uint32_t apriori_rx = cpu->r[instruction->reg_x];
+    
+    cpu->r[instruction->reg_x] |= cpu->r[instruction->reg_y];
+
+    log_format_cpu_output(
+        log_buffer, 
+        LINE_MAX_SIZE, 
+        instruction->opcode,
+        cpu->pc,
+        "OR",
+        instruction->reg_x,
+        instruction->reg_y,
+        apriori_rx,
+        cpu->r[instruction->reg_y],
+        cpu->r[instruction->reg_x]
+    );
+    // log_add(l, log_buffer);
 }
 
-void exec_xor(Cpu* cpu, Memory* mem, Instruction* instruction) {
-    cpu->r[instruction->reg_x] ^= (uint32_t)instruction->reg_y;
+void exec_xor(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
+    char log_buffer[LINE_MAX_SIZE];
+    uint32_t apriori_rx = cpu->r[instruction->reg_x];
+    
+    cpu->r[instruction->reg_x] ^= cpu->r[instruction->reg_y];
+
+    log_format_cpu_output(
+        log_buffer, 
+        LINE_MAX_SIZE, 
+        instruction->opcode,
+        cpu->pc,
+        "XOR",
+        instruction->reg_x,
+        instruction->reg_y,
+        apriori_rx,
+        cpu->r[instruction->reg_y],
+        cpu->r[instruction->reg_x]
+    );
+    // log_add(l, log_buffer);
 }
 
-void exec_sal(Cpu* cpu, Memory* mem, Instruction* instruction) {
+void exec_sal(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
+    char log_buffer[LINE_MAX_SIZE];
+    uint32_t apriori_rx = cpu->r[instruction->reg_x];
+    
     cpu->r[instruction->reg_x] <<= (uint32_t)instruction->immediate;
+
+    log_format_cpu_output(
+        log_buffer, 
+        LINE_MAX_SIZE, 
+        instruction->opcode,
+        cpu->pc,
+        "SAL",
+        instruction->reg_x,
+        instruction->reg_y,
+        apriori_rx,
+        cpu->r[instruction->reg_y],
+        cpu->r[instruction->reg_x]
+    );
+    // log_add(l, log_buffer);
 }
 
-void exec_sar(Cpu* cpu, Memory* mem, Instruction* instruction) {
+void exec_sar(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
+    char log_buffer[LINE_MAX_SIZE];
+    uint32_t apriori_rx = cpu->r[instruction->reg_x];
+    
     cpu->r[instruction->reg_x] >>= (uint32_t)instruction->immediate;
+
+    log_format_cpu_output(
+        log_buffer, 
+        LINE_MAX_SIZE, 
+        instruction->opcode,
+        cpu->pc,
+        "SAR",
+        instruction->reg_x,
+        instruction->reg_y,
+        apriori_rx,
+        cpu->r[instruction->reg_y],
+        cpu->r[instruction->reg_x]
+    );
+    // log_add(l, log_buffer);
 }

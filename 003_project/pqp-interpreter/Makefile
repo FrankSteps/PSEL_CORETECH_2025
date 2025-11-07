@@ -5,7 +5,7 @@ TARGET = $(BUILD_DIR)/pqp-interpreter
 FLAGS = -Wall -O3 -g -Iinclude
 UNIT_FLAGS = -Isrc/cpu
 
-OBJECTS = main.o cpu.o mem.o fetch.o decode.o execute.o alu.o lsu.o jump.o
+OBJECTS = main.o cpu.o mem.o logger.o fetch.o decode.o execute.o alu.o lsu.o jump.o
 
 all: $(OBJECTS)
 	mkdir -p $(BUILD_DIR)
@@ -20,6 +20,9 @@ cpu.o: src/cpu/cpu.c
 
 mem.o: src/mem.c
 	gcc $(FLAGS) -c src/mem.c -o mem.o
+
+logger.o: src/logger.c
+	gcc $(FLAGS) -c src/logger.c -o logger.o
 
 fetch.o: src/cpu/fetch.c
 	gcc $(FLAGS) -c src/cpu/fetch.c -o fetch.o

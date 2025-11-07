@@ -14,9 +14,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// chamando os headers do processador e da memória
+// chamando os headers do processador, memória e logger
 #include "cpu.h"
 #include "mem.h"
+#include "logger.h"
 
 int main(int argc, char* argv[]) {
     // confirmando se o usuário passou o caminho para os arquivos da forma devida. 
@@ -26,10 +27,11 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    // Declarações iniciais: Alocando memória de 256 bytes 
-    // e criando o processador
+    // Declarações iniciais: Alocando memória de 256 bytes, 
+    // criando o processador e logger
     Cpu* cpu = cpu_create();
     Memory* mem = mem_create(256);
+    Logger* l = log_create(200);
 
     //carregar a entrada do programa
     mem_load_program(mem, argv[1]);
@@ -37,7 +39,7 @@ int main(int argc, char* argv[]) {
     // Lógica de execução do programa
     bool run = true;
     while (run) {
-        cpu_cycle(cpu, mem);
+        cpu_cycle(cpu, mem, NULL);
         run = !cpu_simulation_finished(cpu);
     }
 
