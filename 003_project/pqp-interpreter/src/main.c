@@ -38,10 +38,13 @@ int main(int argc, char* argv[]) {
 
     // Lógica de execução do programa
     bool run = true;
+
     while (run) {
-        cpu_cycle(cpu, mem, NULL);
+        cpu_cycle(cpu, mem, l);
         run = !cpu_simulation_finished(cpu);
     }
+
+    log_print_all(l);
 
     // encerrando o programa
     return 0;

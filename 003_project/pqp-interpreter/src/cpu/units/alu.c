@@ -50,7 +50,7 @@ void exec_cmp(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         cpu_get_flag(cpu, L),
         cpu_get_flag(cpu, E)
     );
-    // log_add(l, log_buffer);
+    log_add(l, log_buffer);
 }
 
 void exec_add(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
@@ -72,7 +72,7 @@ void exec_add(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         cpu->r[instruction->reg_y],
         add
     );
-    // log_add(l, log_buffer);
+    log_add(l, log_buffer);
 }
 
 void exec_sub(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
@@ -94,7 +94,7 @@ void exec_sub(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         cpu->r[instruction->reg_y],
         sub
     );
-    // log_add(l, log_buffer);
+    log_add(l, log_buffer);
 }
 
 void exec_and(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
@@ -115,7 +115,7 @@ void exec_and(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         cpu->r[instruction->reg_y],
         cpu->r[instruction->reg_x]
     );
-    // log_add(l, log_buffer);
+    log_add(l, log_buffer);
 }
 
 void exec_or(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
@@ -136,7 +136,7 @@ void exec_or(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         cpu->r[instruction->reg_y],
         cpu->r[instruction->reg_x]
     );
-    // log_add(l, log_buffer);
+    log_add(l, log_buffer);
 }
 
 void exec_xor(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
@@ -157,7 +157,7 @@ void exec_xor(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         cpu->r[instruction->reg_y],
         cpu->r[instruction->reg_x]
     );
-    // log_add(l, log_buffer);
+    log_add(l, log_buffer);
 }
 
 void exec_sal(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
@@ -178,7 +178,7 @@ void exec_sal(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         cpu->r[instruction->reg_y],
         cpu->r[instruction->reg_x]
     );
-    // log_add(l, log_buffer);
+    log_add(l, log_buffer);
 }
 
 void exec_sar(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
@@ -199,5 +199,5 @@ void exec_sar(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         cpu->r[instruction->reg_y],
         cpu->r[instruction->reg_x]
     );
-    // log_add(l, log_buffer);
+    log_add(l, log_buffer);
 }

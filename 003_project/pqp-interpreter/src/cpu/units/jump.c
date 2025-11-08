@@ -8,7 +8,19 @@
 
 // Faz um jump incondicional
 void exec_jmp(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
+    char log_buffer[LINE_MAX_SIZE];
+    
     cpu->pc += (uint32_t)instruction->immediate;
+
+    log_format_cpu_output(
+        log_buffer,
+        LINE_MAX_SIZE,
+        instruction->opcode,
+        cpu->pc-(uint32_t)instruction->immediate,
+        "JMP",
+        instruction->immediate
+    );
+    log_add(l, log_buffer);
 }
 
 // Faz um jump condicional se maior
