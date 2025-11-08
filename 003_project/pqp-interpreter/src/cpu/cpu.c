@@ -41,10 +41,14 @@ void cpu_cycle(Cpu* cpu, Memory* mem, Logger* l) {
     uint32_t machine_code = fetch(mem, cpu);
     Instruction instruction = decode(machine_code);
 
+    
     execute(cpu, mem, instruction, l);
-
+    
     // Avança para a próxima instrução
     cpu->pc += 4;
+
+    // Para debug, impede que o programa quebre totalmente (por enquanto)
+    if (cpu->pc >= 0x0FF) cpu->pc = EXIT;
 }
 
 // libera a memória que fora usada pela CPU

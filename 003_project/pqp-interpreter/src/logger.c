@@ -37,9 +37,9 @@ Logger* log_create(int size) {
     //não precisem ser inicializados com zeros.
     Logger* l = (Logger*)calloc(1, sizeof(Logger));
 
-    FILE* output = fopen(OUTPUT_PATH, "w");
+    l->output = fopen(OUTPUT_PATH, "w");
 
-    if (!output) {
+    if (!l->output) {
         printf("**Erro ao abrir arquivo de output (%s).\n", OUTPUT_PATH);
         return NULL;
     }

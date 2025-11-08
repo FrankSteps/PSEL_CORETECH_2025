@@ -1,4 +1,5 @@
 BUILD_DIR = build
+OUTPUT_DIR = output
 
 TARGET = $(BUILD_DIR)/pqp-interpreter
 
@@ -9,6 +10,7 @@ OBJECTS = main.o cpu.o mem.o logger.o fetch.o decode.o execute.o alu.o lsu.o jum
 
 all: $(OBJECTS)
 	mkdir -p $(BUILD_DIR)
+	mkdir -p $(OUTPUT_DIR)
 	gcc $(OBJECTS) -o $(TARGET)
 	mv $(OBJECTS) $(BUILD_DIR)
 

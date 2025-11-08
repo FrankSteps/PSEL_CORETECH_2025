@@ -18,7 +18,10 @@ inst_type_t decode_instruction_type(uint8_t opcode) {
     return (opcode <= 0x0F ? instruction_table[opcode] : INVALID);
 }
 
-// Descrevam melhor como essa função trabalha. Não entendi muito bem - ass: Francisco
+/*
+A partir do tipo da instrução, aplica máscara de bits de modo a resgatar os operandos
+e montar uma instrução pronta para execução.
+*/
 void decode_operators(Instruction* instruction, inst_type_t type, uint32_t code) {
     uint32_t i16 = 0x0, i5 = 0x0;
 
@@ -53,7 +56,7 @@ void decode_operators(Instruction* instruction, inst_type_t type, uint32_t code)
             return;
         case INVALID:
             printf("** Leitura de instrucao invalida.\n");
-            exit(EXIT_FAILURE);
+            return;
     }
 }
 
@@ -62,16 +65,16 @@ Instruction decode(uint32_t code) {
     Instruction instruction = {0};
     instruction.opcode = (code & 0xFF000000) >> 24;
 
-    printf("decode (opcode): 0x%02X\n", instruction.opcode);
+    // printf("decode (opcode): 0x%02X\n", instruction.opcode);
 
     inst_type_t type = decode_instruction_type(instruction.opcode);
     decode_operators(&instruction, type, code);
 
-    printf("decode (instruction): x->0x%04X, y->0x%04X, i->0x%X\n",
+    /*printf("decode (instruction): x->0x%04X, y->0x%04X, i->0x%X\n",
         instruction.reg_x, 
         instruction.reg_y,
         instruction.immediate
-    );
+    );*/
 
     // retornando a instrução
     return instruction;
