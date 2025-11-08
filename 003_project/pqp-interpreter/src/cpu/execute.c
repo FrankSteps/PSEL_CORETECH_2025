@@ -30,7 +30,10 @@ const void* instruction_exec_table[16] = {
 // Função responsável por receber a instrução e chamar a função ligada à mesma respeitando a orientação da tabela acima.
 void execute(Cpu* cpu, Memory* mem, Instruction instruction, Logger* l) {
     uint8_t opcode = instruction.opcode;
-    void (*handler)(Cpu*, Memory*, Instruction*, Logger*) = instruction_exec_table[opcode];
 
-    handler(cpu, mem, &instruction, l);
+    // Protege o programa de acesso indevido à memória caso opcode seja inválido.
+    if (opcode <= 0x0F) {
+        void (*handler)(Cpu*, Memory*, Instruction*, Logger*) = instruction_exec_table[opcode];
+        handler(cpu, mem, &instruction, l);
+    }
 }
