@@ -51,7 +51,7 @@ Logger* log_create(int size) {
         return NULL;
     }
 
-    l->buffer = (char**)malloc(l->size);
+    l->buffer = (char**)malloc(l->size*sizeof(char*));
 
     if (!l->buffer) {
         printf("**Erro ao alocar buffer do logger.\n");
@@ -69,7 +69,7 @@ Logger* log_create(int size) {
     return l;
 }
 
-void log_add(Logger* l, char* content) {
+void log_add(Logger* l, const char* content) {
     // Garante que content tenha \0
     snprintf(l->buffer[l->buffer_idx], LINE_MAX_SIZE, "%s", content);
     l->buffer_idx++;

@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #define LINE_MAX_SIZE 256
-#define OUTPUT_PATH "output.txt"
+#define OUTPUT_PATH "output/output.txt"
 
 // Define buffer e variáveis auxiliares para armazenamento de strings.
 typedef struct Logger Logger;
@@ -29,7 +29,7 @@ Parâmetros:
     (Logger*) l: Estrutura do logger;
     (char*) content: String a ser adicionada.
 */
-void log_add(Logger* l, char* content);
+void log_add(Logger* l, const char* content);
 
 
 /*
