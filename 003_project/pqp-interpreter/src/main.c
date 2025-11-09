@@ -39,12 +39,20 @@ int main(int argc, char* argv[]) {
     // Lógica de execução do programa
     bool run = true;
 
+    // Impedir estouro do logger (temporario)
+    int i = 0;
     while (run) {
+        i++;
         cpu_cycle(cpu, mem, l);
         run = !cpu_simulation_finished(cpu);
+        if (i > 190) break;
     }
 
     log_print_all(l);
+
+    cpu_destroy(cpu);
+    mem_destroy(mem);
+    log_destroy(l);
 
     // encerrando o programa
     return 0;

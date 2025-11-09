@@ -12,7 +12,8 @@ Basicamente, o MOV é responsável por movimentar/transferir os valores entre os
 void exec_movi(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     char log_buffer[LINE_MAX_SIZE];
     
-    cpu->r[instruction->reg_x] = (uint32_t)instruction->immediate;
+    // Extensão de sinal
+    cpu->r[instruction->reg_x] = (int32_t)(int16_t)instruction->immediate;
 
     log_format_cpu_output(
         log_buffer,
@@ -21,7 +22,7 @@ void exec_movi(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         cpu->pc,
         "MOV",
         instruction->reg_x,
-        instruction->immediate
+        cpu->r[instruction->reg_x]
     );
     log_add(l, log_buffer);
 }
@@ -64,10 +65,10 @@ void exec_mov_rmem(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         cpu->r[instruction->reg_y]+0x01,
         cpu->r[instruction->reg_y]+0x02,
         cpu->r[instruction->reg_y]+0x03,
-        (value & (0xFF<<24))>>24,
-        (value & (0xFF<<16))>>16,
+        value & 0xFF,
         (value & (0xFF<<8))>>8,
-        value & 0xFF
+        (value & (0xFF<<16))>>16,
+        (value & (0xFF<<24))>>24
     );
     log_add(l, log_buffer);
 }
@@ -90,11 +91,11 @@ void exec_mov_memr(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         address+0x01,
         address+0x02,
         address+0x03,
-        instruction->reg_x,
-        (cpu->r[instruction->reg_x] & (0xFF<<24))>>24,
-        (cpu->r[instruction->reg_x] & (0xFF<<16))>>16,
-        (cpu->r[instruction->reg_x] & (0xFF<<8))>>8,
-        cpu->r[instruction->reg_x] & 0xFF
+        instruction->reg_y,
+        cpu->r[instruction->reg_y] & 0xFF,
+        (cpu->r[instruction->reg_y] & (0xFF<<8))>>8,
+        (cpu->r[instruction->reg_y] & (0xFF<<16))>>16,
+        (cpu->r[instruction->reg_y] & (0xFF<<24))>>24
     );
     log_add(l, log_buffer);
 }

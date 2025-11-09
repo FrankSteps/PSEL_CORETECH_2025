@@ -46,7 +46,7 @@ void cpu_cycle(Cpu* cpu, Memory* mem, Logger* l) {
     cpu->pc += 4;
 
     // Para debug, impede que o programa quebre totalmente (por enquanto)
-    if (cpu->pc >= 0x0FF) cpu->pc = EXIT;
+    if (cpu->pc >= 0x10fff) cpu->pc = EXIT;
 }
 
 // libera a memória que fora usada pela CPU

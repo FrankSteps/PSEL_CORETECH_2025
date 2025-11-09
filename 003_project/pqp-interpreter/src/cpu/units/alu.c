@@ -33,8 +33,8 @@ void exec_cmp(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     char log_buffer[LINE_MAX_SIZE];
     
     Instruction* i = instruction;
-    flags_t result = (cpu->r[i->reg_x] > cpu->r[i->reg_y] ? G
-        : (cpu->r[i->reg_x] < cpu->r[i->reg_y] ? L : E));
+    flags_t result = ((int32_t)cpu->r[i->reg_x] > (int32_t)cpu->r[i->reg_y] ? G
+        : ((int32_t)cpu->r[i->reg_x] < (int32_t)cpu->r[i->reg_y] ? L : E));
 
     cpu_update_flags(cpu, result);
 
@@ -142,6 +142,7 @@ void exec_or(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
 void exec_xor(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     char log_buffer[LINE_MAX_SIZE];
     uint32_t apriori_rx = cpu->r[instruction->reg_x];
+    uint32_t apriori_ry = cpu->r[instruction->reg_y];
     
     cpu->r[instruction->reg_x] ^= cpu->r[instruction->reg_y];
 
@@ -154,7 +155,7 @@ void exec_xor(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         instruction->reg_x,
         instruction->reg_y,
         apriori_rx,
-        cpu->r[instruction->reg_y],
+        apriori_ry,
         cpu->r[instruction->reg_x]
     );
     log_add(l, log_buffer);
@@ -164,7 +165,7 @@ void exec_sal(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     char log_buffer[LINE_MAX_SIZE];
     uint32_t apriori_rx = cpu->r[instruction->reg_x];
     
-    cpu->r[instruction->reg_x] <<= (uint32_t)instruction->immediate;
+    cpu->r[instruction->reg_x] <<= instruction->immediate;
 
     log_format_cpu_output(
         log_buffer, 
@@ -173,9 +174,9 @@ void exec_sal(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         cpu->pc,
         "SAL",
         instruction->reg_x,
-        instruction->reg_y,
+        instruction->immediate,
         apriori_rx,
-        cpu->r[instruction->reg_y],
+        instruction->immediate,
         cpu->r[instruction->reg_x]
     );
     log_add(l, log_buffer);
@@ -185,7 +186,7 @@ void exec_sar(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     char log_buffer[LINE_MAX_SIZE];
     uint32_t apriori_rx = cpu->r[instruction->reg_x];
     
-    cpu->r[instruction->reg_x] >>= (uint32_t)instruction->immediate;
+    cpu->r[instruction->reg_x] >>= instruction->immediate;
 
     log_format_cpu_output(
         log_buffer, 
@@ -194,9 +195,9 @@ void exec_sar(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
         cpu->pc,
         "SAR",
         instruction->reg_x,
-        instruction->reg_y,
+        instruction->immediate,
         apriori_rx,
-        cpu->r[instruction->reg_y],
+        instruction->immediate,
         cpu->r[instruction->reg_x]
     );
     log_add(l, log_buffer);
