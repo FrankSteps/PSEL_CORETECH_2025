@@ -68,11 +68,13 @@ Instruction decode(uint32_t code) {
     inst_type_t type = decode_instruction_type(instruction.opcode);
     decode_operators(&instruction, type, code);
 
+    /*
     printf("decode (instruction): x->0x%04X, y->0x%04X, i->0x%X\n",
         instruction.reg_x, 
         instruction.reg_y,
         instruction.immediate
     );
+    */
 
     // retornando a instrução
     return instruction;

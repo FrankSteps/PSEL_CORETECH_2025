@@ -16,6 +16,7 @@ void exec_movi(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     cpu->r[instruction->reg_x] = (int32_t)(int16_t)instruction->immediate;
 
     log_format_cpu_output(
+        l,
         log_buffer,
         LINE_MAX_SIZE,
         instruction->opcode,
@@ -34,6 +35,7 @@ void exec_mov(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     cpu->r[instruction->reg_x] = cpu->r[instruction->reg_y];
 
     log_format_cpu_output(
+        l,
         log_buffer,
         LINE_MAX_SIZE,
         instruction->opcode,
@@ -55,6 +57,7 @@ void exec_mov_rmem(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     cpu->r[instruction->reg_x] = value;
 
     log_format_cpu_output(
+        l,
         log_buffer,
         LINE_MAX_SIZE,
         instruction->opcode,
@@ -82,6 +85,7 @@ void exec_mov_memr(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     mem_write32(mem, address, data);
 
     log_format_cpu_output(
+        l,
         log_buffer,
         LINE_MAX_SIZE,
         instruction->opcode,

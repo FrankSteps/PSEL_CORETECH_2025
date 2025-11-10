@@ -13,8 +13,7 @@ uint32_t fetch(Memory* mem, Cpu* cpu) {
     bool executing = true;
     uint32_t instruction =  mem_read32(mem, cpu->pc, executing);
 
-    printf("pc=0x%04x ", cpu->pc);
-    printf("fetch: 0x%08X\n", instruction);
+    // printf("fetch: 0x%08X\n", instruction);
 
     return instruction;
 }

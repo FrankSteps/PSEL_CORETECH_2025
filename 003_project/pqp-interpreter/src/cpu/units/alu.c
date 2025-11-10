@@ -39,6 +39,7 @@ void exec_cmp(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     cpu_update_flags(cpu, result);
 
     log_format_cpu_output(
+        l,
         log_buffer, 
         LINE_MAX_SIZE, 
         i->opcode,
@@ -61,6 +62,7 @@ void exec_add(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     cpu->r[instruction->reg_x] = (uint32_t)add;
 
     log_format_cpu_output(
+        l,
         log_buffer, 
         LINE_MAX_SIZE, 
         instruction->opcode,
@@ -83,6 +85,7 @@ void exec_sub(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     cpu->r[instruction->reg_x] = (uint32_t)sub;
 
     log_format_cpu_output(
+        l,
         log_buffer, 
         LINE_MAX_SIZE, 
         instruction->opcode,
@@ -104,6 +107,7 @@ void exec_and(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     cpu->r[instruction->reg_x] &= cpu->r[instruction->reg_y];
 
     log_format_cpu_output(
+        l,
         log_buffer, 
         LINE_MAX_SIZE, 
         instruction->opcode,
@@ -125,6 +129,7 @@ void exec_or(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     cpu->r[instruction->reg_x] |= cpu->r[instruction->reg_y];
 
     log_format_cpu_output(
+        l,
         log_buffer, 
         LINE_MAX_SIZE, 
         instruction->opcode,
@@ -147,6 +152,7 @@ void exec_xor(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     cpu->r[instruction->reg_x] ^= cpu->r[instruction->reg_y];
 
     log_format_cpu_output(
+        l,
         log_buffer, 
         LINE_MAX_SIZE, 
         instruction->opcode,
@@ -168,6 +174,7 @@ void exec_sal(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     cpu->r[instruction->reg_x] <<= instruction->immediate;
 
     log_format_cpu_output(
+        l,
         log_buffer, 
         LINE_MAX_SIZE, 
         instruction->opcode,
@@ -189,6 +196,7 @@ void exec_sar(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     cpu->r[instruction->reg_x] >>= instruction->immediate;
 
     log_format_cpu_output(
+        l,
         log_buffer, 
         LINE_MAX_SIZE, 
         instruction->opcode,

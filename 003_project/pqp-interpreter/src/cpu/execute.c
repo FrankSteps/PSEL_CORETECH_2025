@@ -27,9 +27,12 @@ const void* instruction_exec_table[16] = {
     [0x0F] = exec_sar
 };
 
-// Função responsável por receber a instrução e chamar a função ligada à mesma respeitando a orientação da tabela acima.
+// Função responsável por receber a instrução e chamar a função ligada à mesma 
+// respeitando a orientação da tabela acima.
 void execute(Cpu* cpu, Memory* mem, Instruction instruction, Logger* l) {
     uint8_t opcode = instruction.opcode;
+    // Salva maior PC já registrado para lidar com repetição de endereços.
+    log_set_reached_address(l, cpu->pc);
 
     // Protege o programa de acesso indevido à memória caso opcode seja inválido.
     if (opcode <= 0x0F) {
