@@ -1,13 +1,13 @@
 /*
     Desenvolvedores:        Francisco Passos & João Vinícius & Guilherme Ferreira
     Data de criação:        05/11/2025     
-    Data de modificação:    05/11/2025
+    Data de modificação:    10/11/2025
 
     Observações adicionais: 
         Este é o arquivo principal. O mesmo se encontra encarregado por carregar o programa na memória e iniciar a simulação do processador.
 
     Execução:
-    ./main input.txt output.txt
+        build/pqp-interpreter roms/input.txt
 */
 
 // incluindo as bibliotecas base
@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
     // criando o processador e logger
     Cpu* cpu = cpu_create();
     Memory* mem = mem_create(256);
-    Logger* l = log_create(200);
+    Logger* l = log_create(100);
 
     //carregar a entrada do programa
     mem_load_program(mem, argv[1]);
@@ -39,13 +39,9 @@ int main(int argc, char* argv[]) {
     // Lógica de execução do programa
     bool run = true;
 
-    // Impedir estouro do logger (temporario)
-    int i = 0;
     while (run) {
-        i++;
         cpu_cycle(cpu, mem, l);
         run = !cpu_simulation_finished(cpu);
-        if (i > 190) break;
     }
 
     log_print_all(l);
