@@ -159,7 +159,7 @@ Prosseguindo com a função, o código de máquina é lido com a função \textt
 
 Outro componente importante é a função \texttt{decode}, usada para traduzir o código de máquina carregado pelo \texttt{fetch} em instruções claras para o interpretador. Após receber código de máquina, ela pega os 8 bits mais significativos e depois dá um shift pra direita por 24 para eliminar os zeros.
 
-Por fim, a \texttt{execute} recebe a instrução decodificada e a relaciona com uma tabela de instruções (um \texttt{array}). A ideia de Vinícius aqui era de implementar o \texttt{execute} de uma forma que ele tivesse tempo $O(1)$ (constante), mas o interessante é que o compilador já faz isso com \texttt{switches}.
+Por fim, a \texttt{execute} recebe a instrução decodificada e a relaciona com uma tabela de instruções (um \texttt{array}). A ideia de Vinícius aqui era de implementar o \texttt{execute} de uma forma que ele tivesse tempo \(O(1)\) (constante), mas o interessante é que o compilador já faz isso com \texttt{switches}.
 
 \section{Desafios}
 O principal desafio foi o tempo. O projeto demandou muito esforço e agilidade para o seu planejamento, execução, direção e documentação. Além deste, para tornar o projeto mais didático e mais auto-explicativo, foi necessário um amplo conhecimento e experiência na linguagem C, arquitetura de computadores e sistemas operacionais. Aplicações como: arquitetura, design do código pra otimização e organização e a desenvoltura do modulo foram um dos principais desafios como mencionou Vinícius.
