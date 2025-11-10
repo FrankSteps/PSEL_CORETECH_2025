@@ -161,6 +161,10 @@ Outro componente importante é a função \texttt{decode}, usada para traduzir o
 
 Por fim, a \texttt{execute} recebe a instrução decodificada e a relaciona com uma tabela de instruções (um \texttt{array}). A ideia de Vinícius aqui era de implementar o \texttt{execute} de uma forma que ele tivesse tempo \(O(1)\) (constante), mas o interessante é que o compilador já faz isso com \texttt{switches}.
 
+\subsection{Logging}
+
+Enquanto o programa executa, para cada instrução, uma linha da log é gerada. No fim da execução, a função \texttt{cpu\_finishing\_simulation\_log} é executada, imprimindo a mensagem final de \texttt{0xF0F0->EXIT}, e a log completa é impressa com \texttt{log\_print\_all}.
+
 \section{Desafios}
 O principal desafio foi o tempo. O projeto demandou muito esforço e agilidade para o seu planejamento, execução, direção e documentação. Além deste, para tornar o projeto mais didático e mais auto-explicativo, foi necessário um amplo conhecimento e experiência na linguagem C, arquitetura de computadores e sistemas operacionais. Aplicações como: arquitetura, design do código pra otimização e organização e a desenvoltura do modulo foram um dos principais desafios como mencionou Vinícius.
 Os contra-tempos não se voltaram apenas ao projeto, como também à liderança do grupo para que o mesmo fosse o mais produtivo possível.
