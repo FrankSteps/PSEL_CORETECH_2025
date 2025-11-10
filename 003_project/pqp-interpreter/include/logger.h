@@ -93,10 +93,10 @@ Parâmetros:
     (int) buffer_size: Tamanho do buffer;
     (uin8_t) opcode: Código da instrução.
 */
-void log_count_instruction(Logger* l, uint8_t opcode);
-
 void log_format_cpu_output(Logger* l, char* buffer, int buffer_size, uint8_t opcode, ...);
 
+
+void log_count_instruction(Logger* l, uint8_t opcode);
 
 /*
 Desc.: Cria o relatório final da simulação contendo quantidade de execuções de cada

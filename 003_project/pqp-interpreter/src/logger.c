@@ -208,3 +208,13 @@ void log_count_final_results(Logger* l, uint32_t* cpu_registers) {
     snprintf(register_str + current_len, MAX_REGISTER_STR_SIZE - current_len, "]");
     log_add(l, register_str);
 }
+
+void log_destroy(Logger* l) {
+    for (int i = 0; i < l->buffer.size; i++) {
+        free(l->buffer.content[i]);
+    }
+
+    free(l->buffer.content);
+    fclose(l->output);
+    free(l);
+}
