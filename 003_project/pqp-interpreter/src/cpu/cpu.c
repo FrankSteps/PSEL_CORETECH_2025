@@ -39,6 +39,7 @@ Cpu* cpu_create() {
 void cpu_cycle(Cpu* cpu, Memory* mem, Logger* l) {
     uint32_t machine_code = fetch(mem, cpu);
     Instruction instruction = decode(machine_code);
+    log_count_instruction(l, instruction.opcode);
     execute(cpu, mem, instruction, l);
     
     // Avança para a próxima instrução

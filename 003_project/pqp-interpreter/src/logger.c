@@ -6,6 +6,9 @@
 #include <string.h>
 #include <stdarg.h>
 
+#define MAX_INSTRUCTION_COUNT_STR_SIZE 256 
+#define MAX_REGISTER_STR_SIZE 512
+
 const char* format_table[16] = {
     [0x00] = "0x%04X->%s_R%hhd=0x%08X",
     [0x01] = "0x%04X->%s_R%hhd=R%hhd=0x%08X",
@@ -85,6 +88,18 @@ void log_disable(Logger* l) {
     l->enabled = false;
 }
 
+void log_count_instruction(Logger* l, uint8_t opcode) {
+    // 1. Verificação de segurança: checa se o ponteiro do logger é válido
+    if (!l) return;
+    
+    // 2. Verificação de range
+    // O array l->instruction_cnt tem 16 posições (índices 0 a 15)
+    if (opcode < 16) { 
+       
+        l->instruction_cnt[opcode]++;
+    }
+}
+
 void log_set_reached_address(Logger* l, uint32_t pc) {
     // Condição para salvar maior PC atingido
     if (pc > l->reached_address) l->reached_address = pc;
@@ -146,20 +161,50 @@ void log_format_cpu_output(Logger* l, char* buffer, int buffer_size, uint8_t opc
 }
 
 void log_count_final_results(Logger* l, uint32_t* cpu_registers) {
-    // ... Implementar
-    //  Incrementar (em cada instrução) valores de l->instruction_cnt[i] e montar string;
-    //  Montar string iterando cpu_registers[16];
-    //  Adicionar as duas strings montadas ao buffer com log_add();
-
+ if (!l) return;
+    
     printf("** Simulação finalizada.\n");
-}
 
-void log_destroy(Logger* l) {
-    for (int i = 0; i < l->buffer.size; i++) {
-        free(l->buffer.content[i]);
+    // 1. Montar a string de Contagem de Instruções
+    char instruction_count_str[MAX_INSTRUCTION_COUNT_STR_SIZE] = "[";
+    int current_len = 1;
+    int written;
+
+    for (int i = 0; i < 16; i++) {
+        written = snprintf(
+            instruction_count_str + current_len, 
+            MAX_INSTRUCTION_COUNT_STR_SIZE - current_len, 
+            "%02X: %d%s", 
+            i, 
+            l->instruction_cnt[i],
+            (i < 15) ? ", " : ""
+        );
+        current_len += written;
+        if (current_len >= MAX_INSTRUCTION_COUNT_STR_SIZE) break;
     }
+    
+    // Fecha a chave '[' e adiciona a string ao buffer
+    snprintf(instruction_count_str + current_len, MAX_INSTRUCTION_COUNT_STR_SIZE - current_len, "]");
+    log_add(l, instruction_count_str);
 
-    free(l->buffer.content);
-    fclose(l->output);
-    free(l);
+    // 2. Montar a string dos Registradores Finais 
+    char register_str[MAX_REGISTER_STR_SIZE] = ""; // Começa vazio
+    current_len = 0;
+
+    for (int i = 0; i < 16; i++) {
+        written = snprintf(
+            register_str + current_len, 
+            MAX_REGISTER_STR_SIZE - current_len, 
+            "%sR%d=0x%08X", 
+            (i == 0) ? "[" : ", ", // Abre com '[' e usa ", " para os demais
+            i, 
+            cpu_registers[i]
+        );
+        current_len += written;
+        if (current_len >= MAX_REGISTER_STR_SIZE) break;
+    }
+    
+    // Fecha a chave ']' e adiciona a string ao buffer
+    snprintf(register_str + current_len, MAX_REGISTER_STR_SIZE - current_len, "]");
+    log_add(l, register_str);
 }
