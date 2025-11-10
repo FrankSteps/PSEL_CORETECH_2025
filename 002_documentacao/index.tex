@@ -155,9 +155,9 @@ Elas são manipuladas pela função \texttt{update\_flags}. Como exigido pelo do
 
 Um \texttt{while} loop é usado para fazer o programa rodar até o fim do arquivo. Nele, é executado a função \texttt{cpu\_cycle}. Ela traduz código de máquina guardado na memória em instruções e as executa. A função incrementa o campo \texttt{pc} em 4 pois as instruções estão separadas em blocos de quatro sequências hexadecimais. Essa é a função principal do projeto, então vamos se aprofundar nela.
 
-Prosseguindo com a função, o código de máquina é lido com a função \texttt{fetch}. Durante a leitura, a execução é pausada, e instruções são armazenadas na memória, de quatro em quatro bytes. \textit{Big endian} é usado para carregamento, e \textit{little} para a leitura. Para contribuir para o \textit{logging}, a função contém um print que escreve a instrução (de \texttt{fetch}).
+Prosseguindo com a função, o código de máquina é lido com a função \texttt{fetch}. Durante a leitura, a execução é pausada, e instruções são armazenadas na memória, de quatro em quatro bytes. \textit{Big endian} é usado para carregamento, e \textit{little} para a leitura.
 
-Outro componente importante é a função \texttt{decode}, usada para traduzir o código de máquina carregado pelo \texttt{fetch} em instruções claras para o interpretador. Após receber código de máquina, ela pega os 8 bits mais significativos e depois dá um shift pra direita por 24 para eliminar os zeros. E, assim como \texttt{fetch}, o \textit{logging} faz parte da própria função.
+Outro componente importante é a função \texttt{decode}, usada para traduzir o código de máquina carregado pelo \texttt{fetch} em instruções claras para o interpretador. Após receber código de máquina, ela pega os 8 bits mais significativos e depois dá um shift pra direita por 24 para eliminar os zeros.
 
 Por fim, a \texttt{execute} recebe a instrução decodificada e a relaciona com uma tabela de instruções (um \texttt{array}). A ideia de Vinícius aqui era de implementar o \texttt{execute} de uma forma que ele tivesse tempo $O_{(1)}$ (constante), mas o interessante é que o compilador já faz isso com \texttt{switches}.
 
