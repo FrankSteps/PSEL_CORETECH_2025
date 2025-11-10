@@ -150,6 +150,8 @@ void log_count_final_results(Logger* l, uint32_t* cpu_registers) {
     //  Incrementar (em cada instrução) valores de l->instruction_cnt[i] e montar string;
     //  Montar string iterando cpu_registers[16];
     //  Adicionar as duas strings montadas ao buffer com log_add();
+
+    printf("** Simulação finalizada.\n");
 }
 
 void log_destroy(Logger* l) {

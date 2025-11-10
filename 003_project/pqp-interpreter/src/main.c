@@ -42,6 +42,8 @@ int main(int argc, char* argv[]) {
     while (run) {
         cpu_cycle(cpu, mem, l);
         run = !cpu_simulation_finished(cpu);
+
+        if (!run) cpu_finishing_simulation_log(cpu, l);
     }
 
     log_print_all(l);
