@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <stdarg.h>
 
@@ -24,12 +25,18 @@ const char* format_table[16] = {
     [0x0F] = "0x%04X->%s_R%hhd>>=%hd=0x%08X>>%hd=0x%08X"
 };
 
-typedef struct Logger {
-    int intruction_cnt[16];             // Coleta dados de instruções
-    char** buffer;                      // Armazena strings salvass
-    FILE* output;                       // Referência para arquivo de saída.
-    int buffer_idx;                     // Controla índice de strings armazenadas
+typedef struct Buffer {
+    char** content;                     // Armazena strings salvas
+    int index;                          // Controla índice de strings armazenadas
     int size;                           // Tamanho do buffer (definido na criação)
+} Buffer;
+
+typedef struct Logger {
+    Buffer buffer;                      // Estrutura de buffer
+    bool enabled;                       // Flag de habilitação do logger
+    int instruction_cnt[16];            // Coleta dados de instruções
+    uint32_t reached_address;           // Indica maior valor de PC já salvo para impressão  
+    FILE* output;                       // Referência para arquivo de saída.
 } Logger;
 
 Logger* log_create(int size) {
@@ -38,29 +45,30 @@ Logger* log_create(int size) {
     Logger* l = (Logger*)calloc(1, sizeof(Logger));
 
     l->output = fopen(OUTPUT_PATH, "w");
+    l->enabled = true;
 
     if (!l->output) {
         printf("**Erro ao abrir arquivo de output (%s).\n", OUTPUT_PATH);
         return NULL;
     }
 
-    l->size = size;
+    l->buffer.size = size;
 
     if (!l) {
         printf("**Erro ao alocar estrutura do logger.\n");
         return NULL;
     }
 
-    l->buffer = (char**)malloc(l->size*sizeof(char*));
+    l->buffer.content = (char**)malloc(l->buffer.size*sizeof(char*));
 
-    if (!l->buffer) {
+    if (!l->buffer.content) {
         printf("**Erro ao alocar buffer do logger.\n");
         return NULL;
     }
 
-    for (int i = 0; i < l->size; i++) {
-        l->buffer[i] = (char*)malloc(LINE_MAX_SIZE);
-        if (!l->buffer[i]) {
+    for (int i = 0; i < l->buffer.size; i++) {
+        l->buffer.content[i] = (char*)malloc(LINE_MAX_SIZE);
+        if (!l->buffer.content[i]) {
             printf("**Erro ao alocar buffer do logger (idx=%d).\n", i);
             return NULL;
         }
@@ -69,27 +77,54 @@ Logger* log_create(int size) {
     return l;
 }
 
+void log_enable(Logger* l) {
+    l->enabled = true;
+}
+
+void log_disable(Logger* l) {
+    l->enabled = false;
+}
+
+void log_set_reached_address(Logger* l, uint32_t pc) {
+    // Condição para salvar maior PC atingido
+    if (pc > l->reached_address) l->reached_address = pc;
+}
+
+uint32_t log_get_reached_address(Logger* l) {
+    return l->reached_address;
+}
+
 void log_add(Logger* l, const char* content) {
-    if (l->buffer_idx == l->size - 1) {
+    if (l->buffer.index == l->buffer.size-1) {
         printf("**Erro: Buffer do logger esta cheio!\n");
         exit(EXIT_FAILURE);
     }
 
-    // Garante que content tenha \0
-    snprintf(l->buffer[l->buffer_idx], LINE_MAX_SIZE, "%s", content);
-    l->buffer_idx++;
+    //printf("log_enabled=%d\n", l->enabled);
+    if (l->enabled) {
+        // Garante que content tenha \0
+        snprintf(l->buffer.content[l->buffer.index], LINE_MAX_SIZE, "%s", content);
+        l->buffer.index++;
+    }
 }
 
 void log_print(Logger* l, int index) {
-    fprintf(l->output, "%s\n", l->buffer[index]);
+    fprintf(l->output, "%s\n", l->buffer.content[index]);
 }
 
 void log_print_all(Logger* l) {
-    for (int i = 0; i < l->buffer_idx; i++) {
+    for (int i = 0; i < l->buffer.index; i++) {
         log_print(l, i);
     }
 }
 
+/*
+Desc.: Wrapper "privado" que formata instruções a partir de descrição em
+       'format_table'.
+Parâmetros:
+    (uint8_t) opcode: Código da instrução que será formatada.
+Return: String de formatação relativa ao opcode informado.
+*/
 const char* log_get_instruction_format(uint8_t opcode) {
     if (opcode > 16) {
         return "0x%04X->[INVALID]";
@@ -98,21 +133,24 @@ const char* log_get_instruction_format(uint8_t opcode) {
     return format_table[opcode];
 }
 
-void log_format_cpu_output(char* buffer, int buffer_size, uint8_t opcode, ...) {
-    const char* format = log_get_instruction_format(opcode);
-
-    va_list args;                                 // Lista de argumentos não "declarados"
-    va_start(args, opcode);                       // Inicialização da lista
-    vsnprintf(buffer, buffer_size, format, args); // Formatação
+void log_format_cpu_output(Logger* l, char* buffer, int buffer_size, uint8_t opcode, ...) {
+    if (l->enabled) {
+        const char* format = log_get_instruction_format(opcode);
     
-    va_end(args);
+        va_list args;                                 // Lista de argumentos não "declarados"
+        va_start(args, opcode);                       // Inicialização da lista
+        vsnprintf(buffer, buffer_size, format, args); // Formatação
+        
+        va_end(args);
+    }
 }
 
 void log_destroy(Logger* l) {
-    for (int i = 0; i < l->size; i++) {
-        free(l->buffer[i]);
+    for (int i = 0; i < l->buffer.size; i++) {
+        free(l->buffer.content[i]);
     }
 
-    free(l->buffer);
+    free(l->buffer.content);
     fclose(l->output);
+    free(l);
 }
