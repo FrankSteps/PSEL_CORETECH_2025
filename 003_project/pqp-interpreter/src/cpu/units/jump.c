@@ -6,15 +6,20 @@
 #include "cpu_internals.h"
 #include "mem.h"
 
+// Essa função centraliza a lógica de jumps
+void jump(Cpu* cpu, Instruction* instruction) {
+    // Extensão de sinal (feita de forma idêntica nos outros jumps).
+    // A cacetada de castings e o código feio abaixo provém como 
+    // consequências do caos inerente desse projeto, que não é facil demais.
+    cpu->pc = (cpu->pc + ((int32_t)(int16_t)instruction->immediate)) & 0xFFFF;
+}
+
 // Faz um jump incondicional
 void exec_jmp(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     char log_buffer[LINE_MAX_SIZE];
     uint32_t apriori_pc = cpu->pc;
     
-    // Extensão de sinal (feita de forma idêntica nos outros jumps).
-    // A cacetada de castings e o código feio abaixo provém como 
-    // consequências do caos inerente desse projeto, que não é facil demais.
-    cpu->pc = (cpu->pc + ((int32_t)(int16_t)instruction->immediate)) & 0xFFFF;
+    jump(cpu, instruction);
 
     log_format_cpu_output(
         log_buffer,
@@ -32,8 +37,7 @@ void exec_jg(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     char log_buffer[LINE_MAX_SIZE];
     uint32_t apriori_pc = cpu->pc;
     
-    if (cpu->flags & (1 << G_SHIFT))
-        cpu->pc = (cpu->pc + ((int32_t)(int16_t)instruction->immediate)) & 0xFFFF;
+    if (cpu->flags & (1 << G_SHIFT)) jump(cpu, instruction);
 
     log_format_cpu_output(
         log_buffer,
@@ -51,8 +55,7 @@ void exec_jl(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     char log_buffer[LINE_MAX_SIZE];
     uint32_t apriori_pc = cpu->pc;
     
-    if (cpu->flags & (1 << L_SHIFT))
-        cpu->pc = (cpu->pc + ((int32_t)(int16_t)instruction->immediate)) & 0xFFFF;
+    if (cpu->flags & (1 << L_SHIFT)) jump(cpu, instruction);
 
     log_format_cpu_output(
         log_buffer,
@@ -70,8 +73,7 @@ void exec_je(Cpu* cpu, Memory* mem, Instruction* instruction, Logger* l) {
     char log_buffer[LINE_MAX_SIZE];
     uint32_t apriori_pc = cpu->pc;
     
-    if (cpu->flags & (1 << E_SHIFT))
-        cpu->pc = (cpu->pc + ((int32_t)(int16_t)instruction->immediate)) & 0xFFFF;
+    if (cpu->flags & (1 << E_SHIFT)) jump(cpu, instruction);
 
     log_format_cpu_output(
         log_buffer,
