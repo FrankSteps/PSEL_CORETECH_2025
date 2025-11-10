@@ -145,6 +145,13 @@ void log_format_cpu_output(Logger* l, char* buffer, int buffer_size, uint8_t opc
     }
 }
 
+void log_count_final_results(Logger* l, uint32_t* cpu_registers) {
+    // ... Implementar
+    //  Incrementar (em cada instrução) valores de l->instruction_cnt[i] e montar string;
+    //  Montar string iterando cpu_registers[16];
+    //  Adicionar as duas strings montadas ao buffer com log_add();
+}
+
 void log_destroy(Logger* l) {
     for (int i = 0; i < l->buffer.size; i++) {
         free(l->buffer.content[i]);

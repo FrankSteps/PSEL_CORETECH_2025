@@ -95,6 +95,18 @@ Parâmetros:
 */
 void log_format_cpu_output(Logger* l, char* buffer, int buffer_size, uint8_t opcode, ...);
 
+
+/*
+Desc.: Cria o relatório final da simulação contendo quantidade de execuções de cada
+       instrução e valores finais de cada registrador.
+
+Parâmetros:
+    (Logger*) l: Estrutura do logger;
+    (uint32_t*) cpu_registers: Array de registradores.
+*/
+void log_count_final_results(Logger* l, uint32_t* cpu_registers);
+
+
 /*
 Desc.: Libera memória do logger.
 

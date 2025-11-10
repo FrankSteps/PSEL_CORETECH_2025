@@ -1,15 +1,14 @@
 /*
- headers responsável por conter os artifícios de manipulação da CPU
+ Arquivo central de implementação da interface externa da CPU 
 
- ele oferece as operações básicas para:
-   - alocar e inicializar 
-   - execultar os ciclos que:
-       - busca a próxima instrução da memória
-       - decodifica a instrução
-       - executa a instrução decodificada
-    - libera a memória que fora usada pela CPU
-
- O mesmo oferece o suporte para o gabage colector (artifício responsável por liberar a memória quando a mesma não está mais em uso)
+ Ele oferece as operações básicas para:
+   - Alocar e inicializar CPU 
+   - Executar os ciclos que:
+       - Buscam a próxima instrução na memória
+       - Decodificam a instrução
+       - Executam a instrução decodificada
+    - Controla comportamentos do final da simulação
+    - Libera a memória que fora usada pela CPU
 */
 
 // incluindo as instruções base da CPU
@@ -44,9 +43,6 @@ void cpu_cycle(Cpu* cpu, Memory* mem, Logger* l) {
     
     // Avança para a próxima instrução
     cpu->pc += 4;
-
-    // Para debug, impede que o programa quebre totalmente (por enquanto)
-    if (cpu->pc >= 0x10fff) cpu->pc = EXIT;
 }
 
 // libera a memória que fora usada pela CPU
@@ -54,7 +50,14 @@ void cpu_destroy(Cpu* cpu) {
     free(cpu);
 }
 
+// Verifica a cada ciclo se a simulação finalizou
 bool cpu_simulation_finished(Cpu* cpu) {
     return cpu->pc == EXIT;
 }
 
+// Imprime log de finalização da simulação
+void cpu_finishing_simulation_log(Cpu* cpu, Logger* l) {
+    const char* finish_msg = "0xF0F0->EXIT";
+    log_add(l, finish_msg);
+    log_count_final_results(l, cpu->r);
+}
