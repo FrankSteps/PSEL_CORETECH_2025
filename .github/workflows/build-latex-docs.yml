@@ -16,7 +16,9 @@ jobs:
         sudo apt update -y
         sudo apt install texlive-full -y
     - name: Compile LaTeX Docs
-      run: pdflatex \\nonstopmode\\input 002_documentacao/index.tex
+      run: |
+        pdflatex \\nonstopmode\\input 002_documentacao/index.tex
+        pdflatex \\nonstopmode\\input 002_documentacao/index.tex
     - name: Upload Artifact
       uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
       with:
