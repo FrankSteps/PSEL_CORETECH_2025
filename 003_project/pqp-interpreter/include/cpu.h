@@ -17,5 +17,6 @@ Cpu* cpu_create();
 void cpu_destroy(Cpu* cpu);
 void cpu_cycle(Cpu* cpu, Memory* mem, Logger* l);
 bool cpu_simulation_finished(Cpu* cpu);
+void cpu_finishing_simulation_log(Cpu* cpu, Logger* l);
 
 #endif
