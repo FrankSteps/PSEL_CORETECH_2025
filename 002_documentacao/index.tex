@@ -378,17 +378,37 @@ Outro componente importante é a função \texttt{decode}, usada para traduzir o
 
 Por fim, a \texttt{execute} recebe a instrução decodificada e a relaciona com uma tabela de instruções (um \texttt{array}). A ideia de Vinícius aqui era de implementar o \texttt{execute} de uma forma que ele tivesse tempo \(O(1)\) (constante), mas o interessante é que o compilador já faz isso com \texttt{switches}, usando as flags de otimização. Segue o bloco de código do \texttt{cpu.c} que implementa esse processo:
 
+\begin{Code}
+\begin{Verbatim}
+\color{EFD}\EFc{// Função responsável pelo ciclo da CPU}
+\EFt{void} \EFf{cpu\_cycle}\textcolor[HTML]{707183}{(}\EFt{Cpu}\textcolor[HTML]{000000}{*} \EFv{cpu}\textcolor[HTML]{000000}{,} \EFt{Memory}\textcolor[HTML]{000000}{*} \EFv{mem}\textcolor[HTML]{000000}{,} \EFt{Logger}\textcolor[HTML]{000000}{*} \EFv{l}\textcolor[HTML]{707183}{)} \textcolor[HTML]{707183}{\{}
+    \EFt{uint32\_t} \EFv{machine\_code} \textcolor[HTML]{000000}{=} \textcolor[HTML]{0000ff}{fetch}\textcolor[HTML]{7388d6}{(}\textcolor[HTML]{a0522d}{mem}\textcolor[HTML]{000000}{,} \textcolor[HTML]{a0522d}{cpu}\textcolor[HTML]{7388d6}{)}\textcolor[HTML]{000000}{;}
+    \EFt{Instruction} \EFv{instruction} \textcolor[HTML]{000000}{=} \textcolor[HTML]{0000ff}{decode}\textcolor[HTML]{7388d6}{(}\textcolor[HTML]{a0522d}{machine\_code}\textcolor[HTML]{7388d6}{)}\textcolor[HTML]{000000}{;}
+    \textcolor[HTML]{0000ff}{log\_count\_instruction}\textcolor[HTML]{7388d6}{(}\textcolor[HTML]{a0522d}{l}\textcolor[HTML]{000000}{,} \textcolor[HTML]{a0522d}{instruction}\textcolor[HTML]{000000}{.}\textcolor[HTML]{005e8b}{opcode}\textcolor[HTML]{7388d6}{)}\textcolor[HTML]{000000}{;}
+    \textcolor[HTML]{0000ff}{execute}\textcolor[HTML]{7388d6}{(}\textcolor[HTML]{a0522d}{cpu}\textcolor[HTML]{000000}{,}
+\textcolor[HTML]{a0522d}{mem}\textcolor[HTML]{000000}{,} \textcolor[HTML]{a0522d}{instruction}\textcolor[HTML]{000000}{,} \textcolor[HTML]{a0522d}{l}\textcolor[HTML]{7388d6}{)}\textcolor[HTML]{000000}{;}
 
+    \EFc{// Avança para a próxima instrução}
+    \textcolor[HTML]{a0522d}{cpu}\textcolor[HTML]{000000}{->}\textcolor[HTML]{005e8b}{pc} \textcolor[HTML]{000000}{+=} \textcolor[HTML]{000000}{4}\textcolor[HTML]{000000}{;}
+\textcolor[HTML]{707183}{\}}
+\end{Verbatim}
+\end{Code}
 
-add bloco de código add -- CPU CYCLE
+essa função é chamada em \textit{main} dentro de um \textit{loop}
 
+\begin{Code}
+\begin{Verbatim}
+\color{EFD}\EFc{// Lógica de execução do programa}
+\EFt{bool} \EFv{run} \textcolor[HTML]{000000}{=} \EFo{true}\textcolor[HTML]{000000}{;}
 
+\EFk{while} \textcolor[HTML]{707183}{(}\textcolor[HTML]{a0522d}{run}\textcolor[HTML]{707183}{)} \textcolor[HTML]{707183}{\{}
+    \textcolor[HTML]{0000ff}{cpu\_cycle}\textcolor[HTML]{7388d6}{(}\textcolor[HTML]{a0522d}{cpu}\textcolor[HTML]{000000}{,} \textcolor[HTML]{a0522d}{mem}\textcolor[HTML]{000000}{,} \textcolor[HTML]{a0522d}{l}\textcolor[HTML]{7388d6}{)}\textcolor[HTML]{000000}{;}
+    \EFv{run} \textcolor[HTML]{000000}{=} \textcolor[HTML]{000000}{!}\textcolor[HTML]{0000ff}{cpu\_simulation\_finished}\textcolor[HTML]{7388d6}{(}\textcolor[HTML]{a0522d}{cpu}\textcolor[HTML]{7388d6}{)}\textcolor[HTML]{000000}{;}
 
-essa função é chamada em \textit{main} dentro de \textit{loop}
-
-
-
-add bloco da print
+    \EFk{if} \textcolor[HTML]{7388d6}{(}\textcolor[HTML]{000000}{!}\textcolor[HTML]{a0522d}{run}\textcolor[HTML]{7388d6}{)} \textcolor[HTML]{0000ff}{cpu\_finishing\_simulation\_log}\textcolor[HTML]{7388d6}{(}\textcolor[HTML]{a0522d}{cpu}\textcolor[HTML]{000000}{,} \textcolor[HTML]{a0522d}{l}\textcolor[HTML]{7388d6}{)}\textcolor[HTML]{000000}{;}
+\textcolor[HTML]{707183}{\}}
+\end{Verbatim}
+\end{Code}
 
 \pagebreak
 
