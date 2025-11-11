@@ -63,7 +63,6 @@
     Francisco Passos dos Santos Alves & Ciência da Computação\\
     Gabriel Santos de Souza & Engenharia da Computação\\
     Guilherme Ferreira Amâncio & Ciência da Computação\\
-    Rhuan Pablo Silva Santos & Engenharia da Computação\\
     João Vinícius de Almeida Argolô & Engenharia da Computação\\
   \end{tabular}
 \end{center}
@@ -72,7 +71,7 @@
 
 Esta documentação refere-se ao ``Problema C'' da documentação disponibilizada pela equipe da CORETECH para o processo seletivo (PSEL) a qual os membros responsáveis por este projeto estão participando.
 
-O objetivo do projeto a qual este arquivo irá documentar --- assim como foi pedido na documentação do PSEL da coretech --- é criar um simulador, em linguagem C/C++, capaz de reproduzir o comportamento de um processador 32 Bits como artifício para didática. Essa simulação será executada em um ambiente x86-64 e um arquivo contendo um código de máquina será oferecida como a entrada e, por intermédio do simulador projetado conforme as regras de arquitetura d o PicoQuick, gerará um relatório detalhado da execução e do estado final do sistema.
+O objetivo do projeto a qual este arquivo irá documentar --- assim como foi pedido na documentação do PSEL da CORETECH --- é criar um simulador, em linguagem C/C++, capaz de reproduzir o comportamento de um processador 32 Bits como artifício para didática. Essa simulação será executada em um ambiente x86-64 e um arquivo contendo um código de máquina será oferecida como a entrada e, por intermédio do simulador projetado conforme as regras de arquitetura d o PicoQuick, gerará um relatório detalhado da execução e do estado final do sistema.
 
 Esta documentação contará com informações técnicas valiosas de como cada átimo deste projeto funciona e assim servindo como material de apoio técnico-didático para disciplinas como arquitetura de computadores e sistemas operacionais.
 
@@ -87,7 +86,7 @@ Para a memória, um \texttt{struct} contendo múltiplos campos foi utilizado:
 \begin{enumerate}
 \item \texttt{mem8} (\texttt{uint8\_t})
   \begin{description}
-  \item Representa um byte de memória.
+  \item Representa uma memória inteira com alinhamento de 8 bits
   \end{description}
 \item \texttt{size} (\texttt{uint32\_t})
   \begin{description}
@@ -95,8 +94,59 @@ Para a memória, um \texttt{struct} contendo múltiplos campos foi utilizado:
   \end{description}
 \item \texttt{loaded} (\texttt{bool})
   \begin{description}
-  \item Indica se esta instância de memória foi carregada.
+  \item Indica se esta instância de memória foi carregada com código de máquina.
   \end{description}
+\end{enumerate}
+
+\subsection{Logger}
+
+Essa duas estruturas foram criadas para o logging.
+
+\begin{enumerate}
+\item \texttt{content} (\texttt{char**})
+  \begin{description}
+  \item Armezena strings salvas.
+  \end{description}
+
+\item \texttt{index} (\texttt{int})
+  \begin{description}
+  \item Controla o índice de strings armazenadas.
+  \end{description}
+
+\item \texttt{size} (\texttt{int})
+  \begin{description}
+  \item Tamanho do buffer (definido na criação.
+  \end{description}
+
+\end{enumerate}
+
+
+\begin{enumerate}
+\item \texttt{buffer} (\texttt{Buffer})
+  \begin{description}
+  \item Estrutura de buffer.
+  \end{description}
+
+\item \texttt{enabled} (\texttt{bool})
+  \begin{description}
+  \item Flag de habilitação do logger.
+  \end{description}
+
+\item \texttt{instruction\_cnt[16]} (\texttt{int})
+  \begin{description}
+  \item Coleta dados de instruções.
+  \end{description}
+
+\item \texttt{reached\_address} (\texttt{uint32\_t})
+  \begin{description}
+  \item Indica maior valor de PC já salvo para impressão.
+  \end{description}
+
+\item \texttt{output} (\texttt{FILE*})
+  \begin{description}
+  \item  Referência para arquivo de saída.
+  \end{description}
+
 \end{enumerate}
 
 \subsubsection{Funções}
@@ -135,7 +185,7 @@ Os registradores não estão organizados numa forma específica para eles. Todav
 \begin{enumerate}
 \item \texttt{pc} (\texttt{uint16\_t})
   \begin{description}
-  \item Indica a quantidade de programas (instruções) que o interpretador está a processar.
+  \item Um ponteiro que aponta para qual posição da memória está sendo lido pela CPU.
   \end{description}
 \item \texttt{r[REG\_COUNT]} (\texttt{uint32\_t})
   \begin{description}
@@ -143,7 +193,7 @@ Os registradores não estão organizados numa forma específica para eles. Todav
   \end{description}
 \end{enumerate}
 
-Um dos campos foi omitido, mas ele será logo explicado.
+O campo \texttt{flags} foi omitido, mas ele será explicado logo abaixo.
 
 \subsection{Flags}
 
@@ -155,17 +205,29 @@ Elas são manipuladas pela função \texttt{update\_flags}. Como exigido pelo do
 
 Um \texttt{while} loop é usado para fazer o programa rodar até o fim do arquivo. Nele, é executado a função \texttt{cpu\_cycle}. Ela traduz código de máquina guardado na memória em instruções e as executa. A função incrementa o campo \texttt{pc} em 4 pois as instruções estão separadas em blocos de quatro sequências hexadecimais. Essa é a função principal do projeto, então vamos se aprofundar nela.
 
-Prosseguindo com a função, o código de máquina é lido com a função \texttt{fetch}. Durante a leitura, a execução é pausada, e instruções são armazenadas na memória, de quatro em quatro bytes. \textit{Big endian} é usado para carregamento, e \textit{little} para a leitura.
+Prosseguindo com a função, o código de máquina é lido com a função \texttt{fetch}. A mesma é responsável por extrair o \texttt{upcode} e os operandos. As instruções são armazenados na memória em formato \textit{Little Endian} para a sua devida leitura. O papel do \texttt{fetch} é reorganizar de modo que a CPU entenda e processe a instrução.
 
-Outro componente importante é a função \texttt{decode}, usada para traduzir o código de máquina carregado pelo \texttt{fetch} em instruções claras para o interpretador. Após receber código de máquina, ela pega os 8 bits mais significativos e depois dá um shift pra direita por 24 para eliminar os zeros.
+Outro componente importante é a função \texttt{decode}, usada para traduzir o código de máquina carregado pelo \texttt{fetch} em instruções claras para o interpretador. Após receber código de máquina, ela pega os 8 bits mais significativos e depois dá um shift pra direita por 24 para eliminar os zeros. Esse processo acontece para isolar o texttt{opcode}.
 
-Por fim, a \texttt{execute} recebe a instrução decodificada e a relaciona com uma tabela de instruções (um \texttt{array}). A ideia de Vinícius aqui era de implementar o \texttt{execute} de uma forma que ele tivesse tempo \(O(1)\) (constante), mas o interessante é que o compilador já faz isso com \texttt{switches}.
+Por fim, a \texttt{execute} recebe a instrução decodificada e a relaciona com uma tabela de instruções (um \texttt{array}). A ideia de Vinícius aqui era de implementar o \texttt{execute} de uma forma que ele tivesse tempo \(O(1)\) (constante), mas o interessante é que o compilador já faz isso com \texttt{switches}, usando as flags de otimização. Segue o bloco de código do \texttt{cpu.c} que implementa esse processo:
+
+
+
+add bloco de código add -- CPU CYCLE
+
+
+
+essa função é chamada em \textit{main} dentro de \textit{loop}
+
+
+
+add bloco da print
 
 \pagebreak
 
 \subsection{Logging}
 
-Enquanto o programa executa, para cada instrução, uma linha da log é gerada. No fim da execução, a função \texttt{cpu\_finishing\_simulation\_log} é executada, imprimindo a mensagem final de \texttt{0xF0F0->EXIT}, e a log completa é impressa com \texttt{log\_print\_all}.
+Enquanto o programa executa, para cada instrução, uma linha da log é gerada e adicionada no buffer do \textit{logger}. Quando o programa finaliza, a mensagem  final de \texttt{0xF0F0->EXIT} no fim da execução é impressa e a função \texttt{cpu\_finishing\_simulation\_log} é executada e a log completa é impressa com \texttt{log\_print\_all}.
 
 \begin{center}
   \includegraphics[width=.9\linewidth]{./f0f0.png}
@@ -173,26 +235,32 @@ Enquanto o programa executa, para cada instrução, uma linha da log é gerada. 
 
 \section{Desafios}
 
-O principal desafio foi o tempo. O projeto demandou muito esforço e agilidade para o seu planejamento, execução, direção e documentação. Além deste, para tornar o projeto mais didático e mais auto-explicativo, foi necessário um amplo conhecimento e experiência na linguagem C, arquitetura de computadores e sistemas operacionais. Aplicações como: arquitetura, design do código pra otimização e organização e a desenvoltura do modulo foram um dos principais desafios como mencionou Vinícius.
-Os contra-tempos não se voltaram apenas ao projeto, como também à liderança do grupo para que o mesmo fosse o mais produtivo possível.
+O principal desafio foi o tempo. O projeto demandou muito esforço e agilidade para o seu planejamento, execução, direção e documentação. Além deste, para tornar o projeto mais didático e mais auto-explicativo, foi necessário um amplo conhecimento e experiência na linguagem C e arquitetura de computadores. Aplicações como: arquitetura, design do código pra otimização e organização e a desenvoltura do módulo foram um dos principais desafios como mencionou Vinícius, principal desenvolvedor do simulador.
+Os contra-tempos não se voltaram apenas ao projeto, como também à liderança do grupo para que o mesmo fosse o mais produtivo possível, além da saída de um membro da equipe durante o desenvolvimento do projeto.
 
 \section{Decisões}
 
-A primeira decisão, introduzida por Francisco Passos e aceita pelo grupo, consistiu na subdivisão da liderança, de modo que aquele que se destacasse em determinada parte do projeto seria o responsável por ditar as diretrizes de organização e/ou planejamento dentro de seu setor de atuação. Com esse princípio em mente, Gabriel ficou responsável pela liderança da documentação do projeto, visto que já possuía experiência com \LaTeX. Vinícius, por sua vez, assumiu a liderança da execução prática do projeto, por ser o membro mais “mão na massa” e já possuir uma experiência acadêmica maior que os demais. Por fim, Francisco ficou encarregado por gerenciar o repositório no GitHub, mantendo-se como chefe de equipe e responsável por acompanhar o desenvolvimento geral do projeto tanto do software, como da documentação.
+A primeira decisão, introduzida por Francisco Passos e aceita pelo grupo, consistiu na subdivisão da liderança, de modo que aquele que se destacasse em determinada área do projeto seria o responsável por ditar as diretrizes de organização e  planejamento dentro de seu setor de atuação. Com este princípio em mente, Gabriel ficou responsável pela liderança da documentação do projeto, visto que já possuía experiência com \LaTeX. Vinícius, por sua vez, assumiu a liderança da execução prática do projeto, por ser o membro mais “mão na massa” e já possuir uma maior experiência acadêmica comparada aos demais. Por fim, Francisco ficou encarregado por gerenciar o repositório no GitHub, mantendo-se como chefe de equipe e responsável por acompanhar o desenvolvimento geral do projeto tanto da simulação, como da documentação. Por fim, o Guilherme ficou como ajudante do desenvolvimento do simulador, sendo orientado pelo Vinícius.
 
 A segunda decisão foi a escolha pela resolução do Problema C. O principal motivo foi o fato de que todos os integrantes do grupo já possuíam experiência com a linguagem C, o que tornava o Problema C a escolha mais conveniente para o bom andamento do projeto. Mesmo que algum membro não atuasse diretamente no simulador, teria ainda assim a capacidade de compreender as etapas de sua construção.
 
-Por fim, a terceira e última decisão, tomada por Vinícius —-- líder da execução do projeto —-- dizia respeito à organização do código em C do pqp-interpreter. A estrutura do código foi elaborada de forma a ser o mais didática possível, com o desenvolvimento dividido em etapas bem definidas, o que contribuiu significativamente para a legibilidade e manutenção do projeto. Essa decisão representou um dos maiores desafios enfrentados, conforme mencionado na seção de desafios.
+A terceira e última decisão, tomada por Vinícius —-- líder da execução do projeto —-- dizia respeito à organização do código em C do pqp-interpreter. A estrutura do código foi elaborada de forma a ser o mais didática possível, com o desenvolvimento dividido em etapas bem definidas, o que contribuiu significativamente para a legibilidade e manutenção do projeto. Essa decisão representou um dos maiores desafios enfrentados, conforme mencionado na seção de desafios. Outras decisões incluem: Alinhamento de 8 bits da memória para tornar a leitura atômica, encapsulamento das funções da CPU de modo a criar uma interface mais limpa para quem chamar o \texttt{cpu.h}. Toda API pública para o usuário está em \texttt{/include}, dividir as instruções em tipos para facilitar a decodificação, além disso a extensão de sinal é feita em tempo de execução e a lógica de algumas funções como os jumps, foram centralizadas. Na etapa de execução, as funções foram dividas de modo a respeitar a estrutura física da CPU, separando-as em 3 arquivos:
+
+\begin{itemize}
+\item \texttt{alu.c}
+\item \texttt{lsu.c}
+\item \texttt{jump.c}
+\end{itemize}
 
 \section{Aprendizado como uma unidade}
 
-O grupo uniu-se sob a filosofia de pensar como uma unidade. Cada integrante contribuiu com o que pôde, utilizando os artifícios que possuía. O objetivo não foi buscar o melhor resultado absoluto, mas sim realizar o necessário com as condições disponíveis — o essencial. Os participantes que aceitaram o desafio empenharam-se para alcançar o melhor resultado possível, tanto para si quanto para o grupo.
+O grupo uniu-se sob a filosofia de pensar como uma unidade. Cada integrante contribuiu com o que pôde e da forma que lhe era possível, utilizando os recursos disponíveis naquele momento. Os participantes que aceitaram o desafio dedicaram-se com empenho e responsabilidade, respeitando as condições e o prazo estabelecidos para a pesquisa. Desde a gênese, o foco permaneceu na essência do projeto.
 
 \begin{quote}
   “Adam Smith disse que a melhoria individual servia à conquista do grupo.
-  Mas isso é incompleto. O melhor resultado ocorre quando todos no grupo fazem o que é melhor para si e para o grupo.”
+  Mas isso é incompleto. O melhor resultado ocorre quando todos no grupo fazem o que é melhor para si e também para o grupo.”
 \end{quote}
-\hfill \textit{John Nash, ganhador do prêmio Nobel de economia em 1994}
+\hfill \textit{John Nash (personagem), na cinebiografia \textit{Uma Mente Brilhante} (2001). Inspirado no matemático homônimo, ganhador do Prêmio Nobel de Economia em 1994, ao apresentar o conceito de "equilíbrio de Nash".}
 
 \section{Repositório do projeto no GitHub}
 
