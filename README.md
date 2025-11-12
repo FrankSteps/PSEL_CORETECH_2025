@@ -9,3 +9,5 @@ O grupo é formado pelos seguintes discentes:
 | Guilherme Ferreira             | Ciência da Computação        |
 | João Vinicíus de A.            | Engenharia da Computação     |
 
+Esta etapa do PSEL da CORETECH foi finalizada e agradeço aos membros responsáveis pelo desenvolvimento deste projeto. 
+Haverá atualizações por aqui.
