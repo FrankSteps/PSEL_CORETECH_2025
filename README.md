@@ -1,6 +1,6 @@
 # PSEL_CORETECH_2025
 
-O grupo é formado pelos seguintes discentes:
+O grupo é composto pelos seguintes discentes:
 
 | Nome                           | Curso                        |
 |--------------------------------|------------------------------|
