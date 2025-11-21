@@ -11,7 +11,7 @@ O grupo é composto pelos seguintes discentes:
 
 | Avaliador:                     |
 |--------------------------------|
-| William Gabriel Braga          |
+| William Gabriel Braga (Will)   |
 
 Esta etapa do PSEL da CORETECH foi finalizada e agradeço aos membros responsáveis pelo desenvolvimento deste projeto. 
 
